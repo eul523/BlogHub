@@ -5,12 +5,18 @@ BlogHub is a full-stack blog platform built with the MERN stack. It allows users
 
 # Features
 
-## Post Management: Create, view, like, and delete blog posts.
-## Comments & Replies: Add comments to posts and reply to existing comments.
-## Search: Search for posts by keywords or tags and users by name with autocomplete.
-## Authentication: Sign in with Google OAuth or email/password.
-## User Profiles: Update personal profile information, including name, bio, and profile picture.
-## Responsive Design: Accessible on both desktop and mobile devices.
+## Post Management: 
+Create, view, like, and delete blog posts.
+## Comments & Replies: 
+Add comments to posts and reply to existing comments.
+## Search: 
+Search for posts by keywords or tags and users by name with autocomplete.
+## Authentication: 
+Sign in with Google OAuth or email/password.
+## User Profiles: 
+Update personal profile information, including name, bio, and profile picture.
+## Responsive Design: 
+Accessible on both desktop and mobile devices.
 
 # Tech Stack
 
