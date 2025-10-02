@@ -143,18 +143,18 @@ export default function PostOptions({ likesCount, commentsCount, dateWritten, li
 
                 <div ref={settingsRef} className="relative inline-block">
                     <button onClick={() => setShowMore(p => !p)}>
-                        <MoreHorizontal />
+                        <MoreHorizontal size={20} />
                     </button>
 
                     {showMore && (
-                        <div className="absolute bottom-full mb-2 right-0 bg-white border p-2 rounded-md border-gray-500/50 shadow-md">
+                        <div className="absolute bottom-full mb-2 right-0 bg-white dark:bg-[#1E1E1E] border p-2 rounded-md border-gray-500/50 shadow-md">
                             <button
                                 onClick={() => {
                                     setShowMore(false);
                                     handleFavourite();
                                 }}
                                 disabled={favouriting}
-                                className="whitespace-nowrap px-3 py-1 hover:bg-gray-100 rounded"
+                                className="whitespace-nowrap px-3 py-1 hover:bg-gray-100 hover:dark:bg-gray-700/50 rounded w-full flex justify-start"
                             >
                                 {favouriting && <CircularProgress color="white" size={10} className="inline" />}
                                 {favourite ? "Remove favourite" : "Add favourite"}
@@ -169,7 +169,7 @@ export default function PostOptions({ likesCount, commentsCount, dateWritten, li
                                         }
                                     }}
                                     disabled={deleting}
-                                    className="whitespace-nowrap px-3 py-1 hover:bg-gray-100 rounded text-red-600"
+                                    className="whitespace-nowrap px-3 py-1 hover:bg-red-500/20 rounded text-red-600 w-full flex justify-start"
                                 >
                                     {deleting && (
                                         <CircularProgress color="white" size={10} className="inline" />

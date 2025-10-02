@@ -116,7 +116,7 @@ export default function CreatePost() {
               maxLength: { value: 100, message: 'Title must not exceed 100 characters.' },
             })}
             placeholder="Title to your post"
-            className="border-b border-b-black focus:outline-0 focus:border-b-2 h-[50px] w-full"
+            className="border-b border-b-black dark:border-b-white focus:outline-0 focus:border-b-2 h-[50px] w-full"
             disabled={isSubmitting}
           />
         </label>

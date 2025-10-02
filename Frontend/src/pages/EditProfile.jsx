@@ -80,7 +80,7 @@ export default function EditProfile() {
           />
           <label
             htmlFor="profileImageUpload"
-            className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow hover:bg-gray-100 cursor-pointer"
+            className="absolute bottom-2 right-2 bg-white dark:bg-[#1E1E1E] p-2 rounded-full shadow hover:bg-gray-100 hover:dark:bg-gray-700 cursor-pointer"
             aria-label="Edit profile image"
           >
             <Edit/>

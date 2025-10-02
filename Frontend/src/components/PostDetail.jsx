@@ -70,7 +70,7 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
             <RichTextEditor content={body} editable={false} />
 
             {tags.length > 0 && <div className="flex gap-1 text-white">
-                {tags.map(tag => <p key={tag} className="border rounded text-[0.7rem] bg-gray-400 px-1">{"#" + tag}</p>)}
+                {tags.map(tag => <Link to={`/search?q=${tag}`} key={tag} className="border rounded text-[0.7rem] bg-gray-400 dark:bg-[#1E1E1E] px-1">{"#" + tag}</Link>)}
             </div>}
 
 

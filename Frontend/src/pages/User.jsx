@@ -64,21 +64,21 @@ export default function User(){
                 <p>{user.following_count} <span>Following</span></p>
                 {isSelf ? (
                     <div className="flex flex-row w-full justify-center items-center gap-1">
-                    <Link to={"/edit-profile"} className="w-full h-[50px] rounded-full bg-black text-white flex justify-center items-center"><Edit className="mr-1"/>Edit profile</Link>
-                    <Link className="flex px-4 w-fit h-[50px] rounded-full bg-black text-white justify-center items-center" to="/create-post"><Pen className="mr-1"/>Write</Link>
+                    <Link to={"/edit-profile"} className="w-full h-[50px] rounded-full bg-black dark:bg-[#1E1E1E] text-white flex justify-center items-center"><Edit className="mr-1"/>Edit profile</Link>
+                    <Link className="flex px-4 w-fit h-[50px] rounded-full bg-black dark:bg-[#1E1E1E] text-white justify-center items-center" to="/create-post"><Pen className="mr-1"/>Write</Link>
                     </div>
                     
                 ) : (
                     isAuthenticated ? (
                     <form className="w-full" onSubmit={handleSubmit(handleFollow)}>
                     <input type="text" {...register("username")} hidden value={user.username} />
-                    <button disabled={isSubmitting} className={`w-full h-[50px] rounded-full flex justify-center items-center ${following ? "border border-gray-500" : "bg-black text-white"}`}>{isSubmitting && <CircularProgress color="white" size={10} className="inline" />}{following ? "Unfollow" : "Follow"}</button>
+                    <button disabled={isSubmitting} className={`w-full h-[50px] rounded-full flex justify-center items-center ${following ? "border border-gray-500" : "bg-black dark:bg-[#1E1E1E] text-white"}`}>{isSubmitting && <CircularProgress color="white" size={10} className="inline" />}{following ? "Unfollow" : "Follow"}</button>
                 </form>
                 ) : (
                     <button onClick={()=>{
                         addNotification("Login to access this feature.","error");
                         navigate("/login");
-                    }} className={`w-full h-[50px] rounded-full flex justify-center items-center ${user.isFollowing ? "border border-gray-500" : "bg-black text-white"}`}>{user.isFollowing ? "Unfollow" : "Follow"}</button>
+                    }} className={`w-full h-[50px] rounded-full flex justify-center items-center ${user.isFollowing ? "border border-gray-500" : "bg-black dark:bg-[#1E1E1E] text-white"}`}>{user.isFollowing ? "Unfollow" : "Follow"}</button>
                 )
             )}
                 

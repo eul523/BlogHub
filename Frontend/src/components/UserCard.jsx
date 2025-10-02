@@ -46,20 +46,20 @@ export default function ({ name, username, profileImage, description, followers_
 
             {isSelf ? (
                     <div className="flex flex-row justify-center items-center gap-1">
-                    <Link className="flex px-4 w-fit h-[50px] rounded-full bg-black text-white justify-center items-center" to="/create-post">Write</Link>
+                    <Link className="flex px-4 w-fit h-[50px] rounded-full bg-black dark:bg-[#1E1E1E] text-white justify-center items-center" to="/create-post">Write</Link>
                     </div>
                     
                 ) : (
                     isAuthenticated ? (
                     <form className="" onSubmit={handleSubmit(handleFollow)}>
                     <input type="text" {...register("username")} hidden value={username} />
-                    <button disabled={isSubmitting} className={` h-[50px] rounded-full flex justify-center items-center p-4 ${following ? "border border-gray-500" : "bg-black text-white"}`}>{isSubmitting && <CircularProgress color="white" size={10} className="inline" />}{following ? "Unfollow" : "Follow"}</button>
+                    <button disabled={isSubmitting} className={`dark:bg-[#1E1E1E] h-[50px] rounded-full flex justify-center items-center p-4 ${following ? "border border-gray-500" : "bg-black text-white"}`}>{isSubmitting && <CircularProgress color="white" size={10} className="inline" />}{following ? "Unfollow" : "Follow"}</button>
                 </form>
                 ) : (
                     <button onClick={()=>{
                         addNotification("Login to access this feature.","error");
                         navigate("/login");
-                    }} className={` h-[50px] p-4 rounded-full flex justify-center items-center ${isFollowing ? "border border-gray-500" : "bg-black text-white"}`}>{isFollowing ? "Unfollow" : "Follow"}</button>
+                    }} className={` h-[50px] p-4 rounded-full flex justify-center items-center ${isFollowing ? "border border-gray-500" : "bg-black dark:bg-[#1E1E1E] text-white"}`}>{isFollowing ? "Unfollow" : "Follow"}</button>
                 )
             )}
         </div>

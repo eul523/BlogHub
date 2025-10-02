@@ -48,10 +48,10 @@ export default function SearchBar() {
             </form>
 
             {focused && (suggestions.posts?.length || suggestions.users?.length) > 0 &&
-                <div className="absolute mt-2 ml-4 bg-white shadow-[0_0_20px_rgba(0,0,0,0.3)] p-2 rounded max-h-72 overflow-y-auto w-full">
+                <div className="absolute mt-2 ml-4 bg-white dark:bg-[#1E1E1E] shadow-[0_0_20px_rgba(0,0,0,0.3)] p-2 rounded max-h-72 overflow-y-auto w-full">
                     {suggestions.posts.length>0 && 
-                    <div className="flex flex-col justify-center items-center">
-                    <p className="font-medium w-full border-b-1 text-center pb-2 mb-2">Posts</p>
+                    <div className="flex flex-col justify-center items-center py-2">
+                    <p className="font-medium w-full border-b-1 text-center pb-2 mb-2 underline">Posts</p>
                     {suggestions.posts.map(post => (
                         <Link className="w-full flex items-center gap-2 hover:bg-gray-500/50 rounded p-1" onClick={()=>{if(inputRef.current)inputRef.current.value="";setSearchInput("")}} to={`/posts/${post.slug}`}>
                             <p className="font-medium">{post.title}</p>
@@ -60,8 +60,8 @@ export default function SearchBar() {
                     </div>
                     }
                     {suggestions.users.length>0 &&
-                    <div className="flex flex-col justify-center items-center">
-                    <p className="font-medium w-full border-b-1 text-center pb-2 mb-2">people</p>
+                    <div className="flex flex-col justify-center items-center py-2">
+                    <p className="font-medium w-full border-b-1 text-center pb-2 mb-2 underline">People</p>
                     {suggestions.users.map(user => (
                         <Link className="w-full flex items-center gap-2 hover:bg-gray-500/50 rounded p-1" onClick={()=>{if(inputRef.current)inputRef.current.value="";setSearchInput("")}} to={`/users/${user.username}`}>
                             <img src={import.meta.env.VITE_BASE_URL+user.profileImage} className="h-[40px] aspect-square rounded-full"/>

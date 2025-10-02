@@ -30,8 +30,8 @@ export default function Me() {
                 <p>{user.followers_count} <span>Followers</span></p>
                 <p>{user.following_count} <span>Following</span></p>
                 <div className="flex flex-row w-full justify-center items-center gap-1">
-                    <Link to={"/edit-profile"} className="w-full h-[50px] rounded-full bg-black text-white flex justify-center items-center"><Edit className="mr-1" />Edit profile</Link>
-                    <Link className="flex px-4 w-fit h-[50px] rounded-full bg-black text-white justify-center items-center" to="/create-post"><Pen className="mr-1" />Write</Link>
+                    <Link to={"/edit-profile"} className="w-full h-[50px] rounded-full bg-black dark:bg-[#1E1E1E] text-white flex justify-center items-center"><Edit className="mr-1" />Edit profile</Link>
+                    <Link className="flex px-4 w-fit h-[50px] rounded-full bg-black dark:bg-[#1E1E1E] text-white justify-center items-center" to="/create-post"><Pen className="mr-1" />Write</Link>
                 </div>
             </div>
             {posts.posts.map(p => (
