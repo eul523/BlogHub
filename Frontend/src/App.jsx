@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import useAuthStore from "./stores/authStore.js";
 import { useEffect, useState } from "react";
-import Home, { Loader as homeLoader } from "./pages/Home.jsx";
+import Home, { loader as homeLoader } from "./pages/Home.jsx";
 import Layout from "./components/Layout.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
@@ -12,6 +12,8 @@ import Post, { loader as postLoader } from "./pages/Post.jsx";
 import User, { loader as userLoader } from "./pages/User.jsx";
 import EditProfile, { loader as editProfileLoader } from "./pages/EditProfile.jsx";
 import Me, { loader as meLoader } from "./pages/Me.jsx";
+import Favourites, { loader as favLoader } from "./pages/Favourites.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -63,6 +65,11 @@ const router = createBrowserRouter([
           loader: meLoader,
           element: <Me />,
           path: "/me"
+        },
+        {
+          loader:favLoader,
+          path:"/favourites",
+          element:<Favourites/>
         }
         ]
       }

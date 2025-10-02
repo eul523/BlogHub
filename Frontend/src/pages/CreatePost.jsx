@@ -187,7 +187,7 @@ export default function CreatePost() {
 
         <button
           type="submit"
-          className={`max-w-[500px] mx-auto w-full h-[50px] rounded-2xl bg-blue-600`}
+          className={`max-w-[500px] text-white mx-auto w-full h-[50px] rounded-2xl bg-blue-600`}
           disabled={isSubmitting}
         >
           {isSubmitting && <CircularProgress color="white" size={10} className="inline" />}

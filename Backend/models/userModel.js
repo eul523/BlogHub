@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
   },
   profileImage: {
     type: String,
-    default: `/images/${process.env.DEFAULT_PROFILE_IMAGE_ID}`
+    default: "/assets/default-profile.png"
   },
   password: {
     type: String,
@@ -59,7 +59,8 @@ const userSchema = new mongoose.Schema({
     type: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Post"
-    }]
+    }],
+    default:[]
   },
 
   settings: {
@@ -94,8 +95,8 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+userSchema.index({posts:1})
 userSchema.index({
-  posts: 1,
   name: "text",
   username: "text",
   description:"text"

@@ -9,8 +9,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import api from "../api/api.js";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-export default function PostDetail({ _id, title, body, likes_count, comments_count, slug, author, dateWritten, images, tags, liked: likedN }) {
+export default function PostDetail({ _id, title, body, likes_count, comments_count, slug, author, dateWritten, images, tags, liked: likedN, isFavourite, isOwner }) {
     const [liked, setLiked] = useState(likedN);
+    const [favourite, setFavourite] = useState(isFavourite);
     const [likesCount, setLikesCount] = useState(likes_count);
     const [commentsCount, setCommentsCount] = useState(comments_count);
     const [comments, setComments] = useState([]);
@@ -53,7 +54,7 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
 
 
     return (
-        <div className="flex flex-col max-w-[700px] w-[90%] justify-center h-full space-y-8 p-8">
+        <div className="flex flex-col max-w-[700px] w-[90%] justify-center h-full space-y-8">
             <Link to={`/users/${author.username}`} className="flex justify-start gap-2 items-center">
                 <img src={import.meta.env.VITE_BASE_URL + author.profileImage} className="w-[25px] aspect-square rounded-full" />
                 <p>{author.name}</p>
@@ -73,7 +74,7 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
             </div>}
 
 
-            <PostOptions {...{ likesCount, commentsCount, dateWritten, liked, setLiked, setLikesCount, setCommentsCount, slug, expanded: true, setShowComments }} />
+            <PostOptions {...{ likesCount, commentsCount, dateWritten, liked, setLiked, setLikesCount, setCommentsCount, slug, expanded: true, setShowComments, isOwner, favourite, setFavourite }} />
 
             <form onSubmit={handleSubmit(handleCommentSubmit)}>
                 <div className="flex flex-col">
@@ -92,7 +93,7 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
                     setShowComments(p => !p);
                 }
             }}>{showComments ? <ChevronUp size={20} className="inline" /> : <ChevronDown size={20} className="inline" />}Comments</button>}
-            {comments.length === 0 && fetchingComments && <CircularProgress color="primary" />}
+            {comments.length === 0 && fetchingComments && <CircularProgress color="primary" className="w-fit mx-auto" />}
             {showComments && comments.length > 0 && (
                 <>
                     {comments.map(comment => (

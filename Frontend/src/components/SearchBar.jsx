@@ -40,7 +40,7 @@ export default function SearchBar() {
     }
 
     return (
-        <div className="relative">
+        <div className="relative max-w-[40vw]">
             <form className="flex rounded-full bg-gray-400/30 p-1.5 gap-1" onSubmit={handleSubmit}>
                 <button><Search /></button>
                 <input className="focus:outline-0" ref={inputRef} autoComplete="off" onChange={e => setSearchInput(e.target.value)} type="text" name="q" onFocus={() => setFocused(true)}

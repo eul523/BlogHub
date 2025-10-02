@@ -75,10 +75,12 @@ function parseTags(value) {
 router.get("/me", protectRoute, asyncHandler(async (req, res) => {
   try {
     let posts = await getUserPosts(req.user.username, req.params.limit, req.params.page);
-    posts.posts = posts.posts.map(p=>{
+    posts.posts = posts.posts.map(p => {
       let pObj = p.toObject();
       pObj.liked = Array.isArray(pObj.likes) && pObj.likes.some(l => String(l) === String(req.user._id));
+      pObj.isFavourite = req.user.favourite_posts.some(p => String(p._id === String(pObj._id)))
       delete pObj.likes;
+      pObj.isOwner = String(req.user._id) === String(pObj.author._id);
       return pObj;
     })
     return res.status(200).json(posts);
@@ -96,6 +98,31 @@ router.get("/me", protectRoute, asyncHandler(async (req, res) => {
 
 }))
 
+router.get("/favourites", protectRoute, asyncHandler(async (req, res) => {
+  const user = await req.user.populate({
+    path: "favourite_posts",
+    select: "-comments",
+    populate: {
+      path: "author",
+      select: "name username profileImage"
+    }
+  });
+
+
+  const favouritePosts = user.favourite_posts.map(p => {
+    let pp = p.toObject();
+    pp.liked = p.likes.some(i => String(i) === String(req.user._id))
+    delete pp.likes;
+    pp.isFavourite = true;
+    return pp;
+  });
+
+  res.json({
+    favouritePosts
+  });
+
+}))
+
 router.get("/", protectRouteLoose, asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -106,6 +133,8 @@ router.get("/", protectRouteLoose, asyncHandler(async (req, res) => {
       const n = p.toObject();
       if (req.user) {
         n.liked = Array.isArray(p.likes) && p.likes.some(l => String(l) === String(req.user._id));
+        n.isFavourite = req.user.favourite_posts.some(p => String(p._id === String(n._id)));
+        n.isOwner = String(req.user._id) === String(n.author._id);
       }
       delete n.likes;
       n.commentsLen = n.comments.length;
@@ -116,7 +145,7 @@ router.get("/", protectRouteLoose, asyncHandler(async (req, res) => {
     res.status(200).json(data);
   } catch (err) {
     return res.status(err.status || 500).json({
-      msg: err.message
+      msg: "Internal server error"
     });
   }
 }));
@@ -124,7 +153,7 @@ router.get("/", protectRouteLoose, asyncHandler(async (req, res) => {
 router.get("/:slug", protectRouteLoose, asyncHandler(async (req, res) => {
   if (!/^[a-zA-Z0-9-]+$/.test(req.params.slug)) {
     return res.status(400).json({
-      msg: 'Invalid slug format.'
+      msg: 'Invalid slug format'
     });
   }
   try {
@@ -136,11 +165,13 @@ router.get("/:slug", protectRouteLoose, asyncHandler(async (req, res) => {
     delete post.likes;
     if (req.user) {
       post.liked = Array.isArray(data.likes) && data.likes.some(l => String(l) === String(req.user._id));
+      post.isFavourite = req.user.favourite_posts.some(p => String(p._id === String(post._id)))
+      post.isOwner = String(req.user._id) === String(post.author._id);
     }
     res.status(200).json(post);
   } catch (err) {
     return res.status(err.status || 500).json({
-      msg: err.message
+      msg: "Internal server error"
     });
   }
 }));
@@ -275,13 +306,10 @@ router.post('/', protectRoute, upload.array('images', 5), asyncHandler(async (re
       msg: 'Title and body are required.'
     });
   }
-
-
-  // Normalize tags / published as before
   const parsedTags = parseTags(tags);
   const isPublished = parsePublished(published);
 
-  // DB transaction
+
   const session = await mongoose.startSession();
   let savedImages = [];
   try {
@@ -300,8 +328,6 @@ router.post('/', protectRoute, upload.array('images', 5), asyncHandler(async (re
         savedImages.push(newImage)
       }
     }
-
-    // Slug generation
     const baseSlug = slugify(title, {
       lower: true,
       strict: true,
@@ -429,6 +455,81 @@ router.delete("/:slug/like", protectRoute, asyncHandler(async (req, res) => {
   }
 }));
 
+
+router.post("/:slug/favourite", protectRoute, asyncHandler(async (req, res) => {
+  if (!/^[a-zA-Z0-9-]+$/.test(req.params.slug)) {
+    return res.status(400).json({
+      msg: 'Invalid slug format.'
+    });
+  }
+  const post = await Post.findOne({
+    slug: req.params.slug
+  }).select("title");
+  if (!post) return res.status(404).json({
+    msg: "Post not found."
+  });
+
+  if (req.user.favourite_posts.some(i => String(i) === String(post._id))) {
+    return res.status(409).json({
+      msg: "Already in favourites."
+    })
+  }
+  req.user.favourite_posts.push(post._id);
+  try {
+    await req.user.save();
+    return res.json({
+      msg: "Post added to favourites."
+    })
+  } catch (err) {
+    res.status(500).json({
+      msg: "Internal server error"
+    });
+  }
+}))
+
+router.delete("/:slug/favourite", protectRoute, asyncHandler(async (req, res) => {
+  if (!/^[a-zA-Z0-9-]+$/.test(req.params.slug)) {
+    return res.status(400).json({
+      msg: 'Invalid slug format.'
+    });
+  }
+  const post = await Post.findOne({
+    slug: req.params.slug
+  }).select("title");
+  if (!post) return res.status(404).json({
+    msg: "Post not found."
+  });
+
+  if (!req.user.favourite_posts.some(i => String(i) === String(post._id))) {
+    return res.status(409).json({
+      msg: "Not favourite."
+    })
+  }
+  req.user.favourite_posts.pull(post._id);
+
+  try {
+    await req.user.save();
+    res.json({
+      msg: "Post removed from favourites."
+    });
+  } catch (err) {
+    res.status(500).json({
+      msg: "Internal server error"
+    });
+  }
+
+  try {
+    await req.user.save();
+    return res.json({
+      msg: "Post removed from favourites."
+    })
+  } catch (err) {
+    res.status(500).json({
+      msg: "Internal server error"
+    });
+  }
+}))
+
 // comments crud
 
 router.get("/:slug/comments", asyncHandler(async (req, res) => {
@@ -543,7 +644,10 @@ router.get('/:slug/comments/:commentId/replies', protectRouteLoose, asyncHandler
   const comment = await Comment.findOne({
     _id: commentId,
     post: post._id
-  }).populate({path:"replies.author",select:"username name profileImage"});
+  }).populate({
+    path: "replies.author",
+    select: "username name profileImage"
+  });
   if (!comment) {
     return res.status(404).json({
       msg: 'Comment not found or not associated with this post.'
@@ -560,7 +664,11 @@ router.get('/:slug/comments/:commentId/replies', protectRouteLoose, asyncHandler
   const endIndex = page * limit;
 
   const replies = comment.replies.slice(startIndex, endIndex);
-  return res.json({replies,currentPage:page,totalPages})
+  return res.json({
+    replies,
+    currentPage: page,
+    totalPages
+  })
 
 }));
 

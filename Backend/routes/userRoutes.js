@@ -24,6 +24,7 @@ router.post('/profile-image', protectRoute, upload.single('profileImage'), async
       msg: 'No image uploaded.'
     });
   }
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -36,6 +37,11 @@ router.post('/profile-image', protectRoute, upload.single('profileImage'), async
     await image.save({
       session
     });
+
+    if(req.user.profileImage !== "/assets/default-profile.png"){
+      await Image.findByIdAndDelete(String(req.user.profileImage).slice(0,9)[1],{session});
+    }
+
     const user = await User.findByIdAndUpdate(
       req.user._id, {
         profileImage: `/images/${image._id}`
@@ -72,7 +78,7 @@ router.delete(
   protectRoute,
   asyncHandler(async (req, res) => {
     const user = req.user;
-    if (user.profileImage === process.env.DEFAULT_PROFILE_IMAGE_ID) {
+    if (user.profileImage === "/assets/default-profile.png") {
       return res.status(400).json({
         msg: 'No profile image to delete.'
       });
@@ -84,7 +90,7 @@ router.delete(
       await Image.findByIdAndDelete(user.profileImage.slice(8), {
         session
       });
-      user.profileImage = process.env.DEFAULT_PROFILE_IMAGE_ID;
+      user.profileImage = "/assets/default-profile.png";
       await user.save({
         session
       });
@@ -126,6 +132,8 @@ router.get("/:username/posts", protectRouteLoose, asyncHandler(async (req, res) 
       const n = p.toObject();
       if (req.user) {
         n.liked = Array.isArray(p.likes) && p.likes.some(l => String(l) === String(req.user._id));
+        n.isFavourite = req.user.favourite_posts.some(p=>String(p._id===String(n._id)))
+        n.isOwner = String(req.user._id) === String(n.author._id);
       }
       delete n.likes;
       return n;
@@ -314,42 +322,5 @@ router.put("/edit-profile", protectRoute, asyncHandler(async (req, res) => {
   }
 }))
 
-router.get("/me/favourite_posts", protectRoute, asyncHandler(async (req, res) => {
-  const user = await req.user.populate({
-    path: "favourite_posts",
-    select: "-comments -likes",
-    populate: {
-      path: "author",
-      select: "name username profileImage"
-    }
-  });
-
-  res.json(user.favourite_posts);
-
-}))
-
-router.post("/me/favourite_posts",protectRoute,asyncHandler(async (req, res) => {
-  const { slug } = req.body;
-  if(!slug)return res.json({msg:"Provide necessary info."});
-  if (!/^[a-zA-Z0-9-]+$/.test(slug)) {
-    return res.status(400).json({
-      msg: 'Invalid slug format.'
-    });
-  }
-  const post = await Post.findOne({slug});
-  if(!post)return res.status(404);
-  post = post.toObject();
-  delete post.likes;
-  delete post.comments;
-  if(req.user.favourite_posts.includes(post._id))return res.status(409).json({msg:"Already in favourites"})
-    req.user.favourite_posts.push(post._id);
-  try{
-    await req.user.save();
-  return res.json({msg:"Post added to favourites successfully",post})
-  }catch(err){
-    return res.status(500).json({msg:"Something went wrong"})
-  }
-  
-}))
 
 export default router;

@@ -59,6 +59,8 @@ router.get("/google/callback", async (req, res) => {
       picture
     } = payload;
 
+    console.log("google finished")
+
     let user = await userModel.findOne({
       $or: [{
         googleId
@@ -89,7 +91,7 @@ router.get("/google/callback", async (req, res) => {
 
     if (!user) {
       let basename = email.split("@")[0];
-      while (await userModel.find({
+      while (await userModel.findOne({
           username: basename
         })) {
         basename += Math.floor(Math.random() * 10);
@@ -99,12 +101,12 @@ router.get("/google/callback", async (req, res) => {
         name,
         username: basename,
         googleId,
-        profileImage: image ? `images/${image._id}` : `/images/${process.env.DEFAULT_PROFILE_IMAGE_ID}`,
+        profileImage: image ? `/images/${image._id}` : `/images/${process.env.DEFAULT_PROFILE_IMAGE_ID}`,
       });
       await user.save();
     } else if (!user.googleId) {
       user.googleId = googleId;
-      user.profileImage = user.profileImage || image ? `images/${image._id}` : `/images/${process.env.DEFAULT_PROFILE_IMAGE_ID}`;
+      user.profileImage = user.profileImage || image ? `/images/${image._id}` : `/images/${process.env.DEFAULT_PROFILE_IMAGE_ID}`;
       await user.save();
     }
 

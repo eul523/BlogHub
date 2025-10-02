@@ -1,6 +1,6 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { useRef, useEffect } from "react";
-import { Home as HomeIcon, User } from "lucide-react";
+import { Home as HomeIcon, User, Star, MenuIcon, X } from "lucide-react";
 
 export default function Nav({ isMenuOpen, setIsMenuOpen, btnRef }) {
     const navRef = useRef(null);
@@ -21,11 +21,26 @@ export default function Nav({ isMenuOpen, setIsMenuOpen, btnRef }) {
 
     }, [])
     return (
-        <>
-            <nav ref={navRef}
-                className={`z-50 shadow-xl p-0 fixed top-[60px] h-full w-64 left-0 bg-white  opacity-100 text-black transform transition-transform duration-500 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-                    }`}
-            >
+        <div className={`z-50 p-2 pr-10 shadow-xl fixed top-0 h-full w-fit left-0 bg-white  opacity-100 text-black transform transition-transform duration-500 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                    }`}>
+            <div className="flex justify-between w-fit h-[50px] items-center">
+                <button
+                    className="focus:outline-none mr-1"
+                    onClick={() => {
+                        setIsMenuOpen(!isMenuOpen)
+                    }}
+                    ref={btnRef}
+                    aria-label="Toggle menu"
+                >
+                    <MenuIcon/>
+                </button>
+                <Link className="text-2xl font-bold" to="/">{
+                    <h1>
+                        <span className="text-2xl font-bold border-2-white glow-white">Blog</span>
+                        <span className="glow-white">Hub</span></h1>
+                }</Link>
+            </div>
+            <nav ref={navRef}>
 
                 <div className="flex flex-col space-y-4 mx-4 my-4 ">
 
@@ -36,11 +51,18 @@ export default function Nav({ isMenuOpen, setIsMenuOpen, btnRef }) {
                         <NavLink 
                         onClick={()=>setIsMenuOpen(false)}
                         className={({isActive})=>`hover:text-black ${isActive ? "text-black" : "text-gray-500"} w-full font-medium flex justify-start items-center gap-2`} to="/me"><User className="inline" size={20}/>Profile</NavLink>
+                        
+                        <NavLink 
+                        onClick={()=>setIsMenuOpen(false)}
+                        className={({isActive})=>`hover:text-black ${isActive ? "text-black" : "text-gray-500"} w-full font-medium flex justify-start items-center gap-2`} 
+                        to="/favourites">
+                            <Star className="inline" size={20}/>Favourites
+                        </NavLink>
                     </div>
 
                 </div>
 
             </nav>
-        </>
+        </div>
     )
 }

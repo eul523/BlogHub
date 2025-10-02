@@ -1,19 +1,24 @@
 import { Link, useNavigate } from "react-router";
 import useAuthStore from "../stores/authStore";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import ProfilePopup from "./ProfilePopup";
 import { MenuIcon, X } from "lucide-react";
 import SearchBar from "./SearchBar";
+import { useState } from "react";
+import darkLogo from "../../public/dark_logo.jpg";
+import whiteLogo from "../../public/white_logo.jpg";
+
 
 export default function Header({ isMenuOpen, setIsMenuOpen, btnRef, showPopup, setShowPopup }) {
-    const {user, isAuthenticated} = useAuthStore();
+    const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const [darkMode, setDarkMode] = useState(isDarkMode);
+    const {user, isAuthenticated, checkAuth} = useAuthStore();
     const profileRef = useRef(null);
     const navigate = useNavigate();
     const profileImage = user ? import.meta.env.VITE_BASE_URL+user.profileImage : import.meta.env.VITE_BASE_URL+"/images/default-profile-image";
 
-
     return (
-        <div className="h-[60px] text-black flex justify-between items-center  p-2">
+        <div className="h-[60px] text-black flex justify-between items-center  p-2 mb-4 w-full">
             <div className="flex justify-between">
                 <button
                     className="focus:outline-none mr-1"
@@ -23,15 +28,27 @@ export default function Header({ isMenuOpen, setIsMenuOpen, btnRef, showPopup, s
                     ref={btnRef}
                     aria-label="Toggle menu"
                 >
-                    {isMenuOpen ? <X/> : <MenuIcon/>}
+                    <MenuIcon/>
                 </button>
-                <Link className="text-2xl font-bold" to="/">BlogApp</Link>
+                <Link className="text-2xl font-bold" to="/">{
+                    <h1>
+                        <span className="text-2xl font-bold border-2-white glow-white">Blog</span>
+                        <span className="glow-white">Hub</span></h1>
+                }</Link>
             </div>
 
             <SearchBar/>
 
             <div className="flex justify-center items-center gap-3 relative">
-                <button ref={profileRef} className="" onClick={()=>isAuthenticated ? setShowPopup(v=>!v) : navigate("/login")}>
+                <button ref={profileRef} className="" onClick={async ()=>{
+                    if(isAuthenticated){
+                        setShowPopup(v=>!v);
+                        return;
+                    }
+                    await checkAuth();
+                    if(isAuthenticated)setShowPopup(v=>!v);
+                    else navigate("/login")
+                }}>
                     <img
                         className="rounded-full h-[40px] w-[40px] hover:outline-8 hover:outline-[#dcd2d282]"
                         src={profileImage}

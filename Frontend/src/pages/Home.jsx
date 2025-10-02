@@ -1,11 +1,9 @@
 import api from "../api/api.js";
-import { useLoaderData, Await } from "react-router";
+import { useLoaderData } from "react-router";
 import PostCard from "../components/PostCard.jsx";
-import { Suspense } from "react";
 
-export async function Loader() {
+export async function loader() {
     try {
-        await new Promise(res=>setTimeout(res,2500))
         const data = await api.get("/posts");
         return data.data;
     } catch (err) {

@@ -10,6 +10,9 @@ import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes.js";
 import mongoose from "mongoose";
 import Image from './models/imageModel.js';
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 const uri = process.env.MONGODBURI;
@@ -58,6 +61,31 @@ app.get('/api/images/:id', async (req, res) => {
   } catch (err) {
     return res.status(500).send('Server error');
   }
+});
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const IMAGE_DIR = path.join(__dirname, "assets");
+
+
+app.get("/assets/:filename", (req, res) => {
+  const fileName = req.params.filename;
+
+  if (fileName.includes("..") || fileName.includes("/")) {
+    return res.status(400).send("Invalid filename");
+  }
+  const filePath = path.join(IMAGE_DIR, fileName);
+
+
+  if (!filePath.startsWith(IMAGE_DIR)) {
+    return res.status(400).send("Invalid file path");
+  }
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      return res.status(404).send("Image not found");
+    }
+    res.sendFile(filePath);
+  });
 });
 
 app.use("/api/posts", postRoutes);

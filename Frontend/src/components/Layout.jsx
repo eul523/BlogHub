@@ -24,7 +24,7 @@ export default function Layout() {
 
                 <Nav {...{ isMenuOpen, setIsMenuOpen, btnRef, setShowPopup }} />
                 {isNavigating && (
-                    <div className="fixed h-screen w-full bg-black/50 m-auto flex items-center justify-center z-50">
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-[9999]">
                         <CircularProgress />
                     </div>
                 ) }
