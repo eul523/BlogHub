@@ -39,7 +39,7 @@ export default function ({ name, username, profileImage, description, followers_
             <Link className="flex items-center gap-3" to={`/users/${username}`}>
                 <img className="w-[90px] max-w-50 aspect-square rounded-full" src={import.meta.env.VITE_BASE_URL + profileImage} />
                 <div className="flex flex-col">
-                    <p>{name}</p>
+                    <p className="text-2xl font-medium">{name}</p>
                     {description && description.length>0 && <p>{description}</p>}
                 </div>
             </Link>

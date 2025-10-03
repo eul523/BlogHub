@@ -70,11 +70,10 @@ function parseTags(value) {
   return [];
 }
 
-/* ---------- Routes ---------- */
 
 router.get("/me", protectRoute, asyncHandler(async (req, res) => {
   try {
-    let posts = await getUserPosts(req.user.username, req.params.limit, req.params.page);
+    let posts = await getUserPosts(req.user.username, parseInt(req.query.page) || 1, parseInt(req.query.limit) || 20);
     posts.posts = posts.posts.map(p => {
       let pObj = p.toObject();
       pObj.liked = Array.isArray(pObj.likes) && pObj.likes.some(l => String(l) === String(req.user._id));

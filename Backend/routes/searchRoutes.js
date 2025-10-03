@@ -12,7 +12,7 @@ router.get("/posts", protectRouteLoose, async (req, res) => {
     const {
       q
     } = req.query;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = 10;
     const page = parseInt(req.query.page) || 1;
 
     if (!q) return res.status(400).json({
@@ -102,7 +102,7 @@ router.get("/posts", protectRouteLoose, async (req, res) => {
       let pObj = p.toObject();
       if (req.user) {
         pObj.liked = Array.isArray(pObj.likes) && pObj.likes.some(l => String(l) === String(req.user._id));
-        pObj.isFavourite = req.user.favourite_posts.some(p=>String(p._id===String(pObj._id)))
+        pObj.isFavourite = req.user.favourite_posts.some(p => String(p._id === String(pObj._id)))
         pObj.isOwner = String(req.user._id) === String(pObj.author._id);
       }
       delete pObj.likes;
@@ -116,12 +116,11 @@ router.get("/posts", protectRouteLoose, async (req, res) => {
 
     return res.json({
       posts,
-      pagination: {
-        totalResults,
-        totalPages,
-        currentPage: page,
-        hasNext: page < totalPages
-      }
+      totalResults,
+      totalPages,
+      currentPage: page,
+      hasNext: page < totalPages
+
     });
   } catch (err) {
     console.error(err);
@@ -137,7 +136,7 @@ router.get("/users", protectRouteLoose, async (req, res) => {
     const {
       q
     } = req.query;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = 10;
     const page = parseInt(req.query.page) || 1;
 
     if (!q) return res.status(400).json({
@@ -240,12 +239,10 @@ router.get("/users", protectRouteLoose, async (req, res) => {
 
     return res.json({
       users,
-      pagination: {
-        totalResults,
-        totalPages,
-        currentPage: page,
-        hasNext: page < totalPages
-      }
+      totalResults,
+      totalPages,
+      currentPage: page,
+      hasNext: page < totalPages
     });
   } catch (err) {
     console.error(err);
@@ -289,27 +286,27 @@ router.get("/autocomplete", async (req, res) => {
 
 
     const posts = await Post.find({
-      $or: [{
-          title: {
-            $regex: `^${q}`,
-            $options: "i"
+        $or: [{
+            title: {
+              $regex: `^${q}`,
+              $options: "i"
+            }
+          },
+          {
+            body: {
+              $regex: `^${q}`,
+              $options: "i"
+            }
+          },
+          {
+            tags: {
+              $regex: `^${q}`,
+              $options: "i"
+            }
           }
-        },
-        {
-          body: {
-            $regex: `^${q}`,
-            $options: "i"
-          }
-        },
-        {
-          tags: {
-            $regex: `^${q}`,
-            $options: "i"
-          }
-        }
-      ]
-    })
-    .select("title slug")
+        ]
+      })
+      .select("title slug")
       .limit(limit);
 
     res.json({

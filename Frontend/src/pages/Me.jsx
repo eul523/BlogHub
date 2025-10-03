@@ -3,22 +3,58 @@ import api from "../api/api.js";
 import { useLoaderData, Link } from "react-router";
 import PostCard from "../components/PostCard.jsx";
 import { Edit, Pen } from "lucide-react";
+import { useInView } from "react-intersection-observer";
+import { useState, useEffect } from "react";
+import { useNotificationStore } from "../stores/notificationStore.js";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export async function loader() {
     try {
         const posts = await api.get("/posts/me");
         return posts.data;
     } catch (err) {
-        return {err:err.response?.data?.msg || "Something went wrong."}
+        return { err: err.response?.data?.msg || "Something went wrong." }
     }
 }
 
 export default function Me() {
-    const posts = useLoaderData();
-    const user = useAuthStore()?.user;
+    const data = useLoaderData();
 
-    if(posts.err)return <h1>{posts.err}</h1>
-    console.log(posts)
+    if (data.err) return <h1>{data.err}</h1>
+
+    const user = useAuthStore()?.user;
+    const { addNotification } = useNotificationStore();
+    const [posts, setPosts] = useState(data.posts);
+    const [fetching, setFetching] = useState(false);
+    const [hasNext, setHasNext] = useState(data.hasNext);
+    const [page, setPage] = useState(1);
+    const { ref, inView } = useInView({
+        rootMargin: "200px",
+        skip: !hasNext || fetching
+    });
+
+    const fetchPosts = async function () {
+        if (!hasNext || fetching) return;
+        setFetching(true);
+        try {
+            const res = await api.get(`/posts/me?page=${page + 1}`);
+            setPosts(p => [...p, ...res.data.posts]);
+            setPage(res.data.currentPage);
+            setHasNext(res.data.hasNext);
+        } catch (err) {
+            addNotification(err.response?.data?.msg || "Error fetching posts.", "error");
+        } finally {
+            setFetching(false);
+        }
+    }
+    useEffect(() => {
+        if (inView) {
+            fetchPosts();
+        }
+    }, [inView, fetching, hasNext])
+
+
+
     return (
         <div className="flex flex-col justify-center items-center">
             <div className="flex flex-col justify-center items-center space-y-2 m-2 w-[90%] max-w-[700px]">
@@ -34,9 +70,16 @@ export default function Me() {
                     <Link className="flex px-4 w-fit h-[50px] rounded-full bg-black dark:bg-[#1E1E1E] text-white justify-center items-center" to="/create-post"><Pen className="mr-1" />Write</Link>
                 </div>
             </div>
-            {posts.posts.map(p => (
+            {posts.map(p => (
                 <PostCard key={p._id} {...p} />
             ))}
+
+            <div ref={ref}>
+                {!hasNext &&
+                    <p className="text-[0.7rem] text-gray-600/80 dark:text-gray-400/80">Riched the bottom</p>
+                }
+                {fetching && <CircularProgress size={20} />}
+            </div>
         </div>
     )
 }

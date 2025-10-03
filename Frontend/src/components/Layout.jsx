@@ -6,16 +6,26 @@ import Notifications from "./Notification.jsx";
 import CircularProgress from '@mui/material/CircularProgress';
 import Settings from "../pages/Settings.jsx";
 
+const isDarkModeStored = window.localStorage.getItem('isDarkMode');
+const isDarkMode =
+  isDarkModeStored === 'true' || isDarkModeStored === 'false'
+    ? isDarkModeStored === 'true'
+    : window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 export default function Layout() {
-    const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const [darkMode, setDarkMode] = useState(isDarkMode);
+    const [darkMode, setDarkMode] = useState(Boolean(isDarkMode));
     const btnRef = useRef(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const navigation = useNavigation();
     const isNavigating = Boolean(navigation.location);
     const [showSettings, setShowSettings] = useState(false);
+
+    const toggleDarkMode = () => {
+        window.localStorage.setItem("isDarkMode", String(!darkMode));
+        setDarkMode(p=>!p);
+
+    }
 
     useEffect(() => {
         if (darkMode) {
@@ -43,7 +53,7 @@ export default function Layout() {
                     </div>
                 )}
                 {showSettings && 
-                  <Settings {...{darkMode,setDarkMode, setShowSettings}}/>
+                  <Settings {...{darkMode,toggleDarkMode, setShowSettings}}/>
                 }
                 <Outlet />
             </div>

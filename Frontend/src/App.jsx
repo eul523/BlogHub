@@ -13,6 +13,7 @@ import User, { loader as userLoader } from "./pages/User.jsx";
 import EditProfile, { loader as editProfileLoader } from "./pages/EditProfile.jsx";
 import Me, { loader as meLoader } from "./pages/Me.jsx";
 import Favourites, { loader as favLoader } from "./pages/Favourites.jsx";
+import NotFound from "./pages/404.jsx";
 
 
 const router = createBrowserRouter([
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
           element:<Favourites/>
         }
         ]
+      },
+      {
+        path:"*",
+        element: <NotFound/>
       }
     ]
   }

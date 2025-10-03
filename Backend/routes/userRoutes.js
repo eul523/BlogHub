@@ -127,7 +127,7 @@ router.get("/:username", protectRouteLoose, asyncHandler(async (req, res) => {
 
 router.get("/:username/posts", protectRouteLoose, asyncHandler(async (req, res) => {
   try {
-    const posts = await getUserPosts(req.params.username, req.params.limit, req.params.page);
+    const posts = await getUserPosts(req.params.username, parseInt(req.query.page) || 1, parseInt(req.query.limit) || 10);
     posts.posts = posts.posts.map(p => {
       const n = p.toObject();
       if (req.user) {

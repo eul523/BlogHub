@@ -68,7 +68,7 @@ const __dirname = path.dirname(__filename);
 const IMAGE_DIR = path.join(__dirname, "assets");
 
 
-app.get("/assets/:filename", (req, res) => {
+app.get("/api/assets/:filename", (req, res) => {
   const fileName = req.params.filename;
 
   if (fileName.includes("..") || fileName.includes("/")) {
