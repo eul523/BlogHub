@@ -76,7 +76,7 @@ export default function Me() {
 
             <div ref={ref}>
                 {!hasNext &&
-                    <p className="text-[0.7rem] text-gray-600/80 dark:text-gray-400/80">Riched the bottom</p>
+                    <p className="text-[0.7rem] text-gray-600/80 dark:text-gray-400/80">Reached the bottom</p>
                 }
                 {fetching && <CircularProgress size={20} />}
             </div>

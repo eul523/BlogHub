@@ -14,6 +14,7 @@ import EditProfile, { loader as editProfileLoader } from "./pages/EditProfile.js
 import Me, { loader as meLoader } from "./pages/Me.jsx";
 import Favourites, { loader as favLoader } from "./pages/Favourites.jsx";
 import NotFound from "./pages/404.jsx";
+import Followers, {loader as followersLoader} from "./pages/Followers.jsx";
 
 
 const router = createBrowserRouter([
@@ -48,6 +49,11 @@ const router = createBrowserRouter([
         loader:searchLoader,
         element:<Search/>,
         path:"search"
+      },
+      {
+        loader: followersLoader,
+        path:"users/:username/followers",
+        element:<Followers/>
       },
       {
         element: <ProtectRoute />,

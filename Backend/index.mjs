@@ -13,6 +13,7 @@ import Image from './models/imageModel.js';
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 dotenv.config();
 const uri = process.env.MONGODBURI;
@@ -92,6 +93,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/search", searchRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.use((req, res) => {
     return res.status(404).json({msg:"No route found."});

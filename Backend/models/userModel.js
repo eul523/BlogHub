@@ -67,11 +67,7 @@ const userSchema = new mongoose.Schema({
     following_hidden: {
       type: Boolean,
       default: true
-    },
-    followers_hidden: {
-      type: Boolean,
-      default: false
-    },
+    }
   },
   followers_count: {
     type: Number,

@@ -3,6 +3,7 @@ import { Form, useNavigate, Link, useSearchParams } from "react-router-dom";
 import useAuthStore from "../stores/authStore";
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNotificationStore } from "../stores/notificationStore";
+import GoogleIcon from '@mui/icons-material/Google';
 
 export default function Register(){
     const { register, handleSubmit, formState : { errors, isSubmitting }} = useForm();
@@ -53,8 +54,9 @@ export default function Register(){
 
             <button
         onClick={handleGoogleLogin}
-        className="w-full max-w-sm mt-4 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        className="w-full max-w-sm mt-4 bg-blue-500 text-white p-2 rounded hover:bg-blue-600 flex gap-2 items-center justify-center"
       >
+        <GoogleIcon/>
         Continue with Google
       </button>
 

@@ -21,6 +21,7 @@ import {
 import upload from "../multerConfig.js";
 import Image from "../models/imageModel.js";
 import sanitizeHtml from "sanitize-html";
+import Notification from "../models/notificationModel.js";
 
 function cleanBody(html) {
   const clean = sanitizeHtml(html, {
@@ -73,7 +74,7 @@ function parseTags(value) {
 
 router.get("/me", protectRoute, asyncHandler(async (req, res) => {
   try {
-    let posts = await getUserPosts(req.user.username, parseInt(req.query.page) || 1, parseInt(req.query.limit) || 20);
+    let posts = await getUserPosts(req.user.username, parseInt(req.query.page) || 1, parseInt(req.query.limit) || 5);
     posts.posts = posts.posts.map(p => {
       let pObj = p.toObject();
       pObj.liked = Array.isArray(pObj.likes) && pObj.likes.some(l => String(l) === String(req.user._id));
@@ -124,7 +125,7 @@ router.get("/favourites", protectRoute, asyncHandler(async (req, res) => {
 
 router.get("/", protectRouteLoose, asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
+  const limit = parseInt(req.query.limit) || 5;
   try {
     const data = await getPosts(page, limit);
 
@@ -296,7 +297,6 @@ router.post('/', protectRoute, upload.array('images', 5), asyncHandler(async (re
   } = req.body;
   let {
     tags,
-    published
   } = req.body;
   const authorId = req.user._id;
 
@@ -306,7 +306,6 @@ router.post('/', protectRoute, upload.array('images', 5), asyncHandler(async (re
     });
   }
   const parsedTags = parseTags(tags);
-  const isPublished = parsePublished(published);
 
 
   const session = await mongoose.startSession();
@@ -346,7 +345,6 @@ router.post('/', protectRoute, upload.array('images', 5), asyncHandler(async (re
       body: cleanBody(body),
       tags: parsedTags,
       slug,
-      published: isPublished,
       author: authorId,
       images: imageUrls,
     });
@@ -360,6 +358,18 @@ router.post('/', protectRoute, upload.array('images', 5), asyncHandler(async (re
       }
     }, {
       new: true,
+      session
+    });
+    const notif = new Notification({
+      type: "newPost",
+      userId: req.user._id,
+      content: "Post created successfully!",
+      additionalInfo: {
+        slug
+      }
+    })
+
+    await notif.save({
       session
     });
 
@@ -411,10 +421,22 @@ router.post("/:slug/like", protectRoute, asyncHandler(async (req, res) => {
   try {
     post.likes.push(req.user._id);
     await post.save();
+    if (String(post.author) !== String(req.user._id)) {
+      const notif = new Notification({
+        type: "newLike",
+        userId: post.author,
+        content: `${req.user.name} liked your post`,
+        additionalInfo: {
+          slug
+        }
+      })
+      await notif.save();
+    }
     return res.json({
       msg: "Liked the post successfully.",
       likesCount: post.likes.length
     });
+
   } catch (err) {
     console.error('Like error:', err);
     return res.status(500).json({
@@ -602,6 +624,19 @@ router.post('/:slug/comments', protectRoute, asyncHandler(async (req, res) => {
       session
     });
     await session.commitTransaction();
+
+    if (String(post.author) !== String(req.user._id)) {
+      const notif = new Notification({
+        type: "newComment",
+        userId: post.author,
+        content: `${req.user.name} commented on your post "${content.slice(0,10)}..."`,
+        additionalInfo: {
+          slug
+        }
+      })
+      await notif.save();
+    }
+
     return res.status(201).json({
       msg: 'Comment added.',
       comment: populatedComment
@@ -727,6 +762,18 @@ router.post('/:slug/comments/:commentId/replies', protectRoute, asyncHandler(asy
   };
   comment.replies.push(reply);
   await comment.save();
+
+  if (String(comment.author) !== String(req.user._id)) {
+      const notif = new Notification({
+        type: "newReply",
+        userId: comment.author,
+        content: `${req.user.name} replied to your comment.`,
+        additionalInfo: {
+          slug
+        }
+      })
+      await notif.save();
+    }
 
   const newReply = {
     content: content.trim(),

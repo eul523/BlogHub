@@ -16,7 +16,7 @@ export default function CreatePost() {
     setValue,
     reset,
   } = useForm({
-    defaultValues: { published: true, title: '', tags: '', body: '' },
+    defaultValues: { title: '', tags: '', body: '' },
   });
   const navigate = useNavigate();
   const { addNotification } = useNotificationStore();
@@ -74,7 +74,6 @@ export default function CreatePost() {
         .map((t) => t.trim())
         .filter(Boolean);
       submitData.append('tags', JSON.stringify(tagsArr));
-      submitData.append('published', data.published ? 'true' : 'false');
 
       imageItems.forEach((it) => submitData.append('images', it.file));
 
@@ -179,11 +178,6 @@ export default function CreatePost() {
           />
         </label>
         {errors.tags && <p className="text-red-500 text-xs sm:text-sm">{errors.tags.message}</p>}
-
-        <label className="inline-flex items-center gap-2 mt-4">
-          <input type="checkbox" {...register('published')} defaultChecked disabled={isSubmitting} />
-          <span>Publish</span>
-        </label>
 
         <button
           type="submit"

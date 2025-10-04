@@ -6,7 +6,7 @@ import { useNotificationStore } from "../stores/notificationStore";
 import { Pen } from "lucide-react";
 import CircularProgress from "@mui/material/CircularProgress";
 
-export default function ({ name, username, profileImage, description, followers_count, following_count, isSelf, isFollowing, isAuthenticated }) {
+export default function ({ name, username, profileImage, description, isSelf, isFollowing, isAuthenticated }) {
 
     const [following, setFollowing] = useState(isFollowing);
     const {

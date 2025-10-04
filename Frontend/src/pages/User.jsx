@@ -40,7 +40,6 @@ export default function User() {
     const [posts, setPosts] = useState(postsInit.posts);
     const [fetching, setFetching] = useState(false);
     const [hasNext, setHasNext] = useState(data.posts.hasNext);
-    console.log(hasNext)
     const [page, setPage] = useState(1);
     const { ref, inView } = useInView({
         rootMargin: "200px",
@@ -92,7 +91,7 @@ export default function User() {
                 {user.description && user.description.length > 0 &&
                     <p>{user.description}</p>
                 }
-                <p>{user.followers_count} <span>Followers</span></p>
+                <Link to={`/users/${user.username}/followers`}>{user.followers_count} <span>Followers</span></Link>
                 <p>{user.following_count} <span>Following</span></p>
                 {isSelf ? (
                     <div className="flex flex-row w-full justify-center items-center gap-1">
@@ -122,7 +121,7 @@ export default function User() {
 
             <div ref={ref}>
                 {!hasNext &&
-                    <p className="text-[0.7rem] text-gray-600/80 dark:text-gray-400/80">Riched the bottom</p>
+                    <p className="text-[0.7rem] text-gray-600/80 dark:text-gray-400/80">Reached the bottom</p>
                 }
                 {fetching && <CircularProgress size={20} />}
             </div>

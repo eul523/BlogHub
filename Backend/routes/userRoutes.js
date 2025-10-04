@@ -12,7 +12,7 @@ import {
 import mongoose from 'mongoose';
 import upload from '../multerConfig.js';
 import dotenv from "dotenv";
-import Post from "../models/postModel.js";
+import Notification from '../models/notificationModel.js';
 
 const router = express.Router();
 dotenv.config();
@@ -38,8 +38,10 @@ router.post('/profile-image', protectRoute, upload.single('profileImage'), async
       session
     });
 
-    if(req.user.profileImage !== "/assets/default-profile.png"){
-      await Image.findByIdAndDelete(String(req.user.profileImage).slice(0,9)[1],{session});
+    if (req.user.profileImage !== "/assets/default-profile.png") {
+      await Image.findByIdAndDelete(String(req.user.profileImage).slice(0, 9)[1], {
+        session
+      });
     }
 
     const user = await User.findByIdAndUpdate(
@@ -127,12 +129,12 @@ router.get("/:username", protectRouteLoose, asyncHandler(async (req, res) => {
 
 router.get("/:username/posts", protectRouteLoose, asyncHandler(async (req, res) => {
   try {
-    const posts = await getUserPosts(req.params.username, parseInt(req.query.page) || 1, parseInt(req.query.limit) || 10);
+    const posts = await getUserPosts(req.params.username, parseInt(req.query.page) || 1, parseInt(req.query.limit) || 5);
     posts.posts = posts.posts.map(p => {
       const n = p.toObject();
       if (req.user) {
         n.liked = Array.isArray(p.likes) && p.likes.some(l => String(l) === String(req.user._id));
-        n.isFavourite = req.user.favourite_posts.some(p=>String(p._id===String(n._id)))
+        n.isFavourite = req.user.favourite_posts.some(p => String(p._id === String(n._id)))
         n.isOwner = String(req.user._id) === String(n.author._id);
       }
       delete n.likes;
@@ -208,6 +210,16 @@ router.post("/:username/follow", protectRoute, asyncHandler(async (req, res) => 
         session
       }
     );
+    const notif = new Notification({
+      type: "newFollower",
+      userId: targetUser._id,
+      content: `${req.user.name} started following you`,
+      additionalInfo: {
+        username:req.user.username
+      }
+    })
+    await notif.save(session);
+
     await session.commitTransaction();
     return res.status(200).json({
       msg: 'Followed user successfully.'
@@ -303,13 +315,11 @@ router.put("/edit-profile", protectRoute, asyncHandler(async (req, res) => {
   let {
     name,
     description,
-    show_following
   } = req.body;
   const user = await User.findById(req.user._id);
   try {
     user.name = name.length ? name : user.name;
     user.description = description.length ? description : user.description;
-    user.settings.following_hidden = !show_following;
     await user.save();
     return res.json({
       msg: "User profile updated.",
@@ -322,5 +332,35 @@ router.put("/edit-profile", protectRoute, asyncHandler(async (req, res) => {
   }
 }))
 
+router.get("/:username/followers",protectRouteLoose, asyncHandler(async (req, res) => {
+  const page = req.query.page || 1;
+  const limit = 10;
+  let user = await User.findOne({
+    username: req.params.username
+  }, { followers : { $slice: [(page-1)*limit, limit]}})
+  .select("followers followers_count")
+  .populate({
+    path:"followers",
+    select:"username name profileImage followers"
+  })
+  if (!user) {
+    return res.status(404).json({
+      msg: "No user found."
+    });
+  }
+  const followers = user.followers.map(u => {
+    let user = u.toObject();
+    if(req.user){
+      user.isAuthenticated=true;
+      user.isFollowing = Array.isArray(user.followers) && user.followers.some(l => String(l) === String(req.user._id));
+      user.isSelf = String(user._id) === String(req.user._id);
+    }
+    delete user.followers;
+    return user;
+  })
+
+  const totalPages = Math.ceil(user.followers_count/limit);
+  return res.json({users:followers, total:user.followers_count, hasNext:page<totalPages, currentPage:page});
+}))
 
 export default router;

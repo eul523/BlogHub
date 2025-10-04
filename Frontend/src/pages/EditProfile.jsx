@@ -17,7 +17,6 @@ export default function EditProfile() {
     defaultValues: {
       name: user.name,
       description: user.description || "",
-      show_following: !user.settings.following_hidden,
     },
   });
   const { addNotification } = useNotificationStore();
@@ -30,7 +29,6 @@ export default function EditProfile() {
       await api.put("/users/edit-profile", {
         name: data.name,
         description: data.description,
-        show_following: data.show_following,
       });
       navigate("/me?msg=Profile+updated+successfully.");
     } catch (err) {
@@ -100,10 +98,6 @@ export default function EditProfile() {
           placeholder="About you..."
         />
 
-        <label className="flex items-center space-x-2">
-          <input type="checkbox" {...register("show_following")} />
-          <span>Show following</span>
-        </label>
 
         <button
           className="text-white max-w-[700px] min-w-1/2 h-[50px] rounded-full bg-blue-600"

@@ -11,8 +11,7 @@ const throwError = (errStr="Bad request", errCode=400) => {
   throw err;
 }
 
-async function getPosts(page = 1, limit = 20) {
-  limit=1;
+async function getPosts(page = 1, limit = 5) {
   const skip = (page - 1) * limit;
   try {
     const posts = await Post.find({published:true})
@@ -45,8 +44,7 @@ async function getPostBySlug(slug) {
   }
 }
 
-async function getUserPosts(username , page=1, limit=20){
-  limit=1;
+async function getUserPosts(username , page=1, limit=5){
   await new Promise(res=>setTimeout(res,5000))
   const user = await User.findOne({username:username}).populate({
     path:"posts",
