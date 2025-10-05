@@ -5,7 +5,7 @@ import PostCard from "../components/PostCard.jsx";
 import { Edit, Pen } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 import { useState, useEffect } from "react";
-import { useNotificationStore } from "../stores/notificationStore.js";
+import { toast } from "react-hot-toast";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export async function loader() {
@@ -23,7 +23,6 @@ export default function Me() {
     if (data.err) return <h1>{data.err}</h1>
 
     const user = useAuthStore()?.user;
-    const { addNotification } = useNotificationStore();
     const [posts, setPosts] = useState(data.posts);
     const [fetching, setFetching] = useState(false);
     const [hasNext, setHasNext] = useState(data.hasNext);
@@ -42,7 +41,7 @@ export default function Me() {
             setPage(res.data.currentPage);
             setHasNext(res.data.hasNext);
         } catch (err) {
-            addNotification(err.response?.data?.msg || "Error fetching posts.", "error");
+            toast.error(err.response?.data?.msg || "Error fetching posts.");
         } finally {
             setFetching(false);
         }

@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
 import { useEffect, useRef, useState } from 'react';
 import RichTextEditor from '../components/RichTextEditor';
-import { useNotificationStore } from '../stores/notificationStore';
 import { Upload } from 'lucide-react';
 import CircularProgress from '@mui/material/CircularProgress';
+import { toast } from "react-hot-toast";
 
 export default function CreatePost() {
   const {
@@ -19,7 +19,6 @@ export default function CreatePost() {
     defaultValues: { title: '', tags: '', body: '' },
   });
   const navigate = useNavigate();
-  const { addNotification } = useNotificationStore();
 
   const [imageItems, setImageItems] = useState([]); 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,17 +33,17 @@ export default function CreatePost() {
     if (!files.length) return;
 
     if (files.length + imageItems.length > 5) {
-      addNotification('Maximum 5 images allowed.',"error");
+      toast.error('Maximum 5 images allowed.');
       return;
     }
 
     const newItems = files.map((file) => {
       if (!file.type.startsWith('image/')) {
-        addNotification("Upload a valid image.","error");
+        toast.error("Upload a valid image.");
         return;
       }
       if (file.size > 5 * 1024 * 1024) {
-        addNotification("Maximum 5MB allowed.");
+        toast.error("Maximum 5MB allowed.");
         return;
       } 
       return { file, url: URL.createObjectURL(file) };
@@ -96,7 +95,7 @@ export default function CreatePost() {
       
       const msg =
         err?.response?.data?.msg || err?.message || 'Failed to create post.';
-      addNotification(msg, "error");
+      toast.error(msg);
     } finally {
       setIsSubmitting(false);
     }

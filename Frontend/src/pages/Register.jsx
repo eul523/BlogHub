@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { Form, useNavigate, Link, useSearchParams } from "react-router-dom";
 import useAuthStore from "../stores/authStore";
 import CircularProgress from '@mui/material/CircularProgress';
-import { useNotificationStore } from "../stores/notificationStore";
+import { toast } from "react-hot-toast";
 import GoogleIcon from '@mui/icons-material/Google';
 
 export default function Register(){
@@ -11,7 +11,6 @@ export default function Register(){
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const redirectTo = searchParams.get('redirectTo') || '/';
-    const { addNotification } = useNotificationStore();
     
         const handleGoogleLogin = () => {
     window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/auth/google`;
@@ -27,9 +26,10 @@ export default function Register(){
         }
     }
 
+    if(authError)toast.error(authError);
+
     return (
         <div className="m-auto flex flex-col justify-center items-center w-[90%]">
-            {authError && <p className="text-red-500 font-medium">{authError}</p>}
             {isAuthenticated && <p className="text-green-500 font-medium">Registered successfully.</p>}
 
             <div className="mt-8 w-full">

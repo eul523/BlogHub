@@ -35,7 +35,7 @@ router.post("/:id/read", protectRoute, async (requestAnimationFrame, res) => {
     }
 })
 
-router.post("read-all", protectRoute, async (req, res) => {
+router.post("/read-all", protectRoute, async (req, res) => {
     try{
         await Notification.deleteMany({userId:req.user._id});
         return res.json({msg:"Marked all as read"})

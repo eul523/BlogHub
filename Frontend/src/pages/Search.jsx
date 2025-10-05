@@ -2,7 +2,7 @@ import api from "../api/api";
 import PostCard from "../components/PostCard.jsx";
 import UserCard from "../components/UserCard.jsx";
 import { useLoaderData, NavLink } from "react-router";
-import { useNotificationStore } from "../stores/notificationStore.js";
+import { toast } from "react-hot-toast";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useInView } from "react-intersection-observer";
 import { useState, useEffect } from "react";
@@ -25,7 +25,6 @@ export default function Search() {
     if (err) {
         return <p>{err}</p>
     }
-    const { addNotification } = useNotificationStore();
     const [results, setResults] = useState(data.posts || data.users);
     const [fetching, setFetching] = useState(false);
     const [hasNext, setHasNext] = useState(data.hasNext);
@@ -44,7 +43,7 @@ export default function Search() {
             setPage(data.data.currentPage);
             setHasNext(data.data.hasNext);
         } catch (err) {
-            addNotification(err.response?.data?.msg || "Error fetching posts.", "error");
+            toast.error(err.response?.data?.msg || "Error fetching posts.");
         } finally {
             setFetching(false);
         }

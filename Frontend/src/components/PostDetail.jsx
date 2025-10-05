@@ -3,11 +3,11 @@ import RichTextEditor from "./RichTextEditor";
 import PostOptions from "./PostOptions";
 import { useState } from "react";
 import { Comment } from "./Comment.jsx";
-import { useNotificationStore } from "../stores/notificationStore.js";
 import { useForm } from "react-hook-form";
 import CircularProgress from '@mui/material/CircularProgress';
 import api from "../api/api.js";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function PostDetail({ _id, title, body, likes_count, comments_count, slug, author, dateWritten, images, tags, liked: likedN, isFavourite, isOwner }) {
     const [liked, setLiked] = useState(likedN);
@@ -18,7 +18,6 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
     const [moreComments, setMoreComments] = useState(commentsCount > 0);
     const [fetchingComments, setFetchingComments] = useState(false);
     const [showComments, setShowComments] = useState(false);
-    const { addNotification } = useNotificationStore();
     const {
         register,
         handleSubmit,
@@ -34,7 +33,7 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
             setComments(p => [...p, ...commentsData.data.comments]);
         } catch (err) {
             console.log(err)
-            addNotification(err.response.data?.msg || "Couldn't fetch comments.", "error");
+            toast.error(err.response.data?.msg || "Couldn't fetch comments.");
         } finally {
             setFetchingComments(false);
         }
@@ -48,7 +47,7 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
             reset({}, { keepErrors: false })
             setComments(p => [res.data.comment, ...p]);
         } catch (err) {
-            addNotification(err.response?.data?.msg || "Couldn't Comment.", "error");
+            toast.error(err.response?.data?.msg || "Couldn't Comment.");
         }
     }
 

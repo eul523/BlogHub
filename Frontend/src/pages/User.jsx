@@ -4,7 +4,7 @@ import { useLoaderData, Link, useNavigate } from "react-router";
 import PostCard from "../components/PostCard.jsx";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { useNotificationStore } from "../stores/notificationStore.js";
+import { toast } from "react-hot-toast";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Edit, Pen } from "lucide-react";
 import { useInView } from "react-intersection-observer";
@@ -28,7 +28,6 @@ export default function User() {
     const postsInit = data.posts;
     const [following, setFollowing] = useState(user.isFollowing);
     const { isAuthenticated } = useAuthStore();
-    const { addNotification } = useNotificationStore();
     const navigate = useNavigate();
     const {
         register,
@@ -55,7 +54,7 @@ export default function User() {
             setPage(res.data.currentPage);
             setHasNext(res.data.posts.hasNext);
         } catch (err) {
-            addNotification(err.response?.data?.msg || "Error fetching posts.", "error");
+            toast.error(err.response?.data?.msg || "Error fetching posts.");
         } finally {
             setFetching(false);
         }
@@ -72,14 +71,14 @@ export default function User() {
             if (following) {
                 const res = await api.delete(`/users/${data.username}/follow`);
                 setFollowing(false);
-                addNotification(`You unfollowed ${user.name}`, "success");
+                toast.success(`You unfollowed ${user.name}`);
             } else {
                 await api.post(`/users/${data.username}/follow`);
                 setFollowing(true);
-                addNotification(`You started following ${user.name}`, "success");
+                toast.success(`You started following ${user.name}`);
             }
         } catch (err) {
-            addNotification(err.response?.data?.msg || "Couldn't follow/unfollow", "error");
+            toast.error(err.response?.data?.msg || "Couldn't follow/unfollow");
         }
     }
 
@@ -107,7 +106,7 @@ export default function User() {
                         </form>
                     ) : (
                         <button onClick={() => {
-                            addNotification("Login to access this feature.", "error");
+                            toast.error("Login to access this feature.");
                             navigate("/login");
                         }} className={`w-full h-[50px] rounded-full flex justify-center items-center ${user.isFollowing ? "border border-gray-500" : "bg-black dark:bg-[#1E1E1E] text-white"}`}>{user.isFollowing ? "Unfollow" : "Follow"}</button>
                     )

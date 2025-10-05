@@ -1,5 +1,5 @@
 import api from "../api/api.js";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router";
 
@@ -40,7 +40,7 @@ export default function SearchBar() {
     }
 
     return (
-        <div className="relative max-w-[40vw]">
+        <div className="relative max-w-[30vw]">
             <form className="flex rounded-full bg-gray-400/30 p-1.5 gap-1" onSubmit={handleSubmit}>
                 <button><Search /></button>
                 <input className="focus:outline-0" ref={inputRef} autoComplete="off" onChange={e => setSearchInput(e.target.value)} type="text" name="q" onFocus={() => setFocused(true)}

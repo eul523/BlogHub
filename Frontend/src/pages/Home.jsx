@@ -2,7 +2,7 @@ import api from "../api/api.js";
 import { useLoaderData, Link } from "react-router";
 import PostCard from "../components/PostCard.jsx";
 import { useState, useRef, useEffect } from "react";
-import { useNotificationStore } from "../stores/notificationStore.js";
+import { toast } from "react-hot-toast";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useInView } from "react-intersection-observer";
 
@@ -16,7 +16,6 @@ export async function loader() {
 }
 
 export default function Home() {
-    const { addNotification } = useNotificationStore();
     const data = useLoaderData();
 
     if (!data.posts || data.posts.length === 0) return <h1>No posts.</h1>
@@ -40,7 +39,7 @@ export default function Home() {
             setHasNext(data.data.hasNext);
             console.log(data.data.currentPage,data.data.hasNext)
         } catch (err) {
-            addNotification(err.response?.data?.msg || "Error fetching posts.", "error");
+            toast.error(err.response?.data?.msg || "Error fetching posts.");
         } finally {
             setFetching(false);
         }

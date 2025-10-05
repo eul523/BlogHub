@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { Form, useNavigate, Link, useSearchParams } from "react-router-dom";
 import useAuthStore from "../stores/authStore";
 import CircularProgress from '@mui/material/CircularProgress';
-import { useNotificationStore } from "../stores/notificationStore";
+import { toast } from "react-hot-toast";
 import GoogleIcon from '@mui/icons-material/Google';
 
 export default function Login() {
@@ -16,7 +16,6 @@ export default function Login() {
     const [searchParams] = useSearchParams();
     const redirectTo = searchParams.get('redirectTo') || '/';
     const error = searchParams.get("error");
-    const { addNotification } = useNotificationStore();
 
     const handleGoogleLogin = () => {
     window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/auth/google`;
@@ -31,11 +30,11 @@ export default function Login() {
         }
         
     } 
+    if(error)toast.error(error);
+    if(authError)toast.error(authError);
 
     return (
         <div className="m-auto flex flex-col justify-center items-center w-[90%]">
-            {authError && <p className="text-red-500 font-medium">{authError}</p>}
-            {error && <p className="text-red-500 font-medium">{error}</p>}
             
             {isAuthenticated && <p className="text-green-500 font-medium">Logged in successfully.</p>}
 

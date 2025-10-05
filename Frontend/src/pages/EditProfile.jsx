@@ -3,7 +3,7 @@ import { Edit } from "lucide-react";
 import api from "../api/api";
 import { useState } from "react";
 import { useNavigate, useLoaderData } from "react-router";
-import { useNotificationStore } from "../stores/notificationStore";
+import { toast } from "react-hot-toast";
 import CircularProgress from '@mui/material/CircularProgress';
 
 export async function loader() {
@@ -19,7 +19,6 @@ export default function EditProfile() {
       description: user.description || "",
     },
   });
-  const { addNotification } = useNotificationStore();
   const [imageUploading, setImageUploading] = useState(false);
   const [profileImage, setProfileImage] = useState(user.profileImage);
   const navigate = useNavigate();
@@ -32,7 +31,7 @@ export default function EditProfile() {
       });
       navigate("/me?msg=Profile+updated+successfully.");
     } catch (err) {
-      addNotification(err?.response?.data?.msg || "Couldn't update profile.","error")
+      toast.error(err?.response?.data?.msg || "Couldn't update profile.")
     }
   };
 
@@ -49,7 +48,7 @@ export default function EditProfile() {
       });
       setProfileImage(res.data.profileImage);
     } catch (err) {
-      addNotification(err?.response?.data?.msg || "Couldn't upload image.","error")
+      toast.error(err?.response?.data?.msg || "Couldn't upload image.")
     } finally {
       setImageUploading(false);
     }

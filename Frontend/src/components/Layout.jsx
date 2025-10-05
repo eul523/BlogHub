@@ -2,9 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import Header from "./Header.jsx";
 import Nav from "./Nav.jsx";
 import { Outlet, useNavigation } from "react-router";
-import Notifications from "./Notification.jsx";
 import CircularProgress from '@mui/material/CircularProgress';
 import Settings from "../pages/Settings.jsx";
+import { Toaster } from "react-hot-toast";
+import api from "../api/api.js";
 
 const isDarkModeStored = window.localStorage.getItem('isDarkMode');
 const isDarkMode =
@@ -20,6 +21,7 @@ export default function Layout() {
     const navigation = useNavigation();
     const isNavigating = Boolean(navigation.location);
     const [showSettings, setShowSettings] = useState(false);
+    const [notifications, setNotifications]  = useState([]);
 
     const toggleDarkMode = () => {
         window.localStorage.setItem("isDarkMode", String(!darkMode));
@@ -37,14 +39,30 @@ export default function Layout() {
         }
     }, [darkMode]);
 
+    useEffect(()=>{
+        const fetchNotifs = async () => {
+            try{
+                const data = await api.get("/notifications");
+                if(JSON.stringify(data.data) !== JSON.stringify(notifications))setNotifications(data.data);
+            }catch(err){
+
+            }
+        }
+        fetchNotifs();
+
+        const interval = setInterval(fetchNotifs, 10000);
+
+        return () => clearInterval(interval);
+    }, [])
+
     return (
         <>
             <div className="m-0 p-0 box-border">
 
                 <header className="sticky top-0 z-40 shadow-xl">
-                    <Header {...{ isMenuOpen, setIsMenuOpen, btnRef, setShowPopup, showPopup, setShowSettings }} />
+                    <Header {...{ isMenuOpen, setIsMenuOpen, btnRef, setShowPopup, showPopup, setShowSettings, notifications, setNotifications }} />
                 </header>
-                <Notifications />
+                <Toaster/>
 
                 <Nav {...{ isMenuOpen, setIsMenuOpen, btnRef, setShowPopup, setShowSettings }} />
                 {isNavigating && (

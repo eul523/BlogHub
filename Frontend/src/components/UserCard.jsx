@@ -2,9 +2,8 @@ import { Link, useNavigate } from "react-router";
 import { useState } from "react";
 import api from "../api/api";
 import { useForm } from "react-hook-form";
-import { useNotificationStore } from "../stores/notificationStore";
-import { Pen } from "lucide-react";
 import CircularProgress from "@mui/material/CircularProgress";
+import { toast } from "react-hot-toast";
 
 export default function ({ name, username, profileImage, description, isSelf, isFollowing, isAuthenticated }) {
 
@@ -15,7 +14,6 @@ export default function ({ name, username, profileImage, description, isSelf, is
             formState: { errors, isSubmitting },
             reset
         } = useForm();
-        const { addNotification } = useNotificationStore();
     const navigate = useNavigate();
 
     async function handleFollow(data) {
@@ -23,14 +21,14 @@ export default function ({ name, username, profileImage, description, isSelf, is
             if(following){
                 const res = await api.delete(`/users/${data.username}/follow`);
                 setFollowing(false);
-                addNotification(`You unfollowed ${name}`,"success");
+                toast.success(`You unfollowed ${name}`);
             }else{
                 await api.post(`/users/${data.username}/follow`);
                 setFollowing(true);
-                addNotification(`You started following ${name}`,"success");
+                toast.success(`You started following ${name}`);
             }
         }catch(err){
-            addNotification(err.response?.data?.msg || "Couldn't follow/unfollow","error");
+            toast.error(err.response?.data?.msg || "Couldn't follow/unfollow");
         }
     }
 
@@ -57,7 +55,7 @@ export default function ({ name, username, profileImage, description, isSelf, is
                 </form>
                 ) : (
                     <button onClick={()=>{
-                        addNotification("Login to access this feature.","error");
+                        toast.error("Login to access this feature.");
                         navigate("/login");
                     }} className={` h-[50px] p-4 rounded-full flex justify-center items-center ${isFollowing ? "border border-gray-500" : "bg-black dark:bg-[#1E1E1E] text-white"}`}>{isFollowing ? "Unfollow" : "Follow"}</button>
                 )

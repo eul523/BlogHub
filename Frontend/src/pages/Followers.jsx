@@ -2,7 +2,7 @@ import { useLoaderData } from "react-router";
 import { useState, useEffect } from "react";
 import api from "../api/api";
 import UserCard from "../components/UserCard";
-import { useNotificationStore } from "../stores/notificationStore";
+import { toast } from "react-hot-toast";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useInView } from "react-intersection-observer";
 
@@ -22,7 +22,6 @@ export default function Followers() {
     console.log(data)
     const user = data.user;
     const [users, setUsers] = useState(data.users);
-    const { addNotification } = useNotificationStore();
     const [fetching, setFetching] = useState(false);
     const [hasNext, setHasNext] = useState(data.hasNext);
     const [page, setPage] = useState(1);
@@ -40,7 +39,7 @@ export default function Followers() {
             setPage(data.data.currentPage);
             setHasNext(data.data.hasNext);
         } catch (err) {
-            addNotification(err.response?.data?.msg || "Error fetching users.", "error");
+            toast.error(err.response?.data?.msg || "Error fetching users.");
         } finally {
             setFetching(false);
         }

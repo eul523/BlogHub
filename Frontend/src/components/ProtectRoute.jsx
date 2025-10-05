@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useEffect,useState } from "react";
 import useAuthStore from "../stores/authStore";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function ProtectRoute() {
   const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
@@ -16,7 +17,7 @@ export default function ProtectRoute() {
   if (isLoading || (!isAuthenticated && !authChecked)) {
     return (
       <div className="h-full w-full flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        <CircularProgress/>
       </div>
     );
   }

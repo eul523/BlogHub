@@ -25,7 +25,7 @@ export default function Nav({ isMenuOpen, setIsMenuOpen, btnRef, setShowSettings
                 }`}>
             <div className={`z-50 p-2 pr-10 shadow-xl  w-fit h-full  opacity-100 dark:bg-[#1E1E1E] dark:shadow-0 fixed top-0 bg-white left-0 transform transition-transform duration-500 ease-in-out  ${isMenuOpen ? 'translate-x-0 delay-100' : '-translate-x-full'
                 }`}>
-                <div className="flex justify-between w-fit h-[50px] items-center">
+                <div className="flex justify-between w-fit px-2 sm:px-6 h-[50px] items-center">
                     <button
                         className="focus:outline-none mr-1"
                         onClick={() => {

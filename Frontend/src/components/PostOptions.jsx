@@ -1,13 +1,13 @@
 import { Heart, MessageCircle, MoreHorizontal, } from "lucide-react";
 import { HeartFilled } from "./Svgs.jsx";
 import api from "../api/api.js";
-import { useNotificationStore } from "../stores/notificationStore";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router";
 import CircularProgress from '@mui/material/CircularProgress';
+import { toast } from "react-hot-toast";
 
 
-function formatDate(dateStr) {
+export function formatDate(dateStr) {
     const date = new Date(dateStr);
     const now = new Date();
 
@@ -34,7 +34,6 @@ export default function PostOptions({ likesCount, commentsCount, dateWritten, li
     const [liking, setLiking] = useState(false);
     const [favouriting, setFavouriting] = useState(false);
     const [deleting, setDeleting] = useState(false);
-    const { addNotification } = useNotificationStore();
     const location = useLocation();
     const navigate = useNavigate();
     const [showMore, setShowMore] = useState(false);
@@ -47,16 +46,16 @@ export default function PostOptions({ likesCount, commentsCount, dateWritten, li
             let res;
             if (!liked) res = await api.post(`posts/${slug}/like`);
             else res = await api.delete(`posts/${slug}/like`);
-            addNotification(liked ? "Unliked" : "Liked!", "success");
+            toast.success(liked ? "Unliked" : "Liked!");
             setLiked(p => !p);
             setLikesCount(res.data.likesCount);
         } catch (err) {
             if (err.response.status === 401) {
-                addNotification("Login to access this feature.", "error");
+                toast.error("Login to access this feature.");
                 setLiking(false);
                 return navigate(`/login?redirectTo=${location.pathname}`);
             }
-            addNotification(err.response.status?.msg || `Couldn't ${liked ? "Unlike" : "Like"} the post.`, "error")
+            toast.error(err.response.status?.msg || `Couldn't ${liked ? "Unlike" : "Like"} the post.`)
         } finally {
             setLiking(false);
         }
@@ -67,18 +66,18 @@ export default function PostOptions({ likesCount, commentsCount, dateWritten, li
         if (favourite) {
             try {
                 await api.delete(`/posts/${slug}/favourite`);
-                addNotification("Removed from favourites.", "success")
+                toast.success("Removed from favourites.")
                 setFavourite(false);
             } catch (err) {
-                addNotification(err.response?.data?.msg, "error")
+                toast.error(err.response?.data?.msg)
             }
         } else {
             try {
                 await api.post(`/posts/${slug}/favourite`);
-                addNotification("Added to favourites.", "success")
+                toast.success("Added to favourites.")
                 setFavourite(true);
             } catch (err) {
-                addNotification(err.response?.data?.msg, "error")
+                toast.error(err.response?.data?.msg)
             }
         }
         setFavouriting(false);
@@ -90,9 +89,9 @@ export default function PostOptions({ likesCount, commentsCount, dateWritten, li
             await api.delete(`/posts/${slug}`);
             if(expanded)navigate("/");
             else window.location.reload();
-            addNotification("Post deleted.", "success")
+            toast.success("Post deleted.")
         } catch (err) {
-            addNotification(err.response?.data?.msg, "error")
+            toast.error(err.response?.data?.msg)
         }
         setDeleting(false);
     }

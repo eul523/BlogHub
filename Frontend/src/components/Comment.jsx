@@ -1,13 +1,12 @@
 import { Link, Form } from "react-router";
 import api from "../api/api";
 import { useState } from "react";
-import { useNotificationStore } from "../stores/notificationStore";
 import { useForm } from "react-hook-form";
 import CircularProgress from '@mui/material/CircularProgress';
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 function Reply({ reply, setReplies, slug, commentId, setShowReplies }) {
-    const { addNotification } = useNotificationStore();
     const [showReplyInput, setShowReplyInput] = useState(false);
     const imgSrc = import.meta.env.VITE_BASE_URL + reply.author.profileImage;
     const {
@@ -24,7 +23,7 @@ function Reply({ reply, setReplies, slug, commentId, setShowReplies }) {
             setShowReplies(true);
             setReplies(p => [res.data.reply, ...p]);
         } catch (err) {
-            addNotification(err.response.data?.msg || "Couldn't reply.", "error");
+            toast.error(err.response.data?.msg || "Couldn't reply.");
         }
     }
 
@@ -55,7 +54,6 @@ export function Comment({ content, author, repliesLen, _id, slug }) {
     const [moreReply, setMoreReply] = useState(repliesLen > 0);
     const [fetchingReply, setFetchingReply] = useState(false);
     const [showReplies, setShowReplies] = useState(false);
-    const { addNotification } = useNotificationStore();
     const [showReplyInput, setShowReplyInput] = useState(false);
     const {
         register,
@@ -73,7 +71,7 @@ export function Comment({ content, author, repliesLen, _id, slug }) {
             setShowReplies(true);
             setReplies(p => [...p, ...repliesData.data.replies]);
         } catch (err) {
-            addNotification(err.response.data?.msg || "Couldn't fetch replies.", "error");
+            toast.error(err.response.data?.msg || "Couldn't fetch replies.");
         } finally {
             setFetchingReply(false);
         }
@@ -87,7 +85,7 @@ export function Comment({ content, author, repliesLen, _id, slug }) {
             setMoreReply(true);
             setReplies(p => [res.data.reply, ...p]);
         } catch (err) {
-            addNotification(err.response.data?.msg || "Couldn't reply.", "error");
+            toast.error(err.response.data?.msg || "Couldn't reply.");
         }
     }
 
