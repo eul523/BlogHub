@@ -60,7 +60,7 @@ export default function EditProfile() {
         <div className="relative w-[200px] flex justify-center items-center">
           <img
             className="w-[200px] max-w-[50%] aspect-square rounded-full"
-            src={import.meta.env.VITE_BASE_URL + profileImage}
+            src={import.meta.env.VITE_BACKEND_URL + "/api" + profileImage}
             alt="Profile"
           />
           {imageUploading && (

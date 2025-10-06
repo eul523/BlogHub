@@ -35,7 +35,7 @@ export default function ({ name, username, profileImage, description, isSelf, is
     return (
         <div className="flex justify-between my-4 items-center w-full">
             <Link className="flex items-center gap-3" to={`/users/${username}`}>
-                <img className="w-[90px] max-w-50 aspect-square rounded-full" src={import.meta.env.VITE_BASE_URL + profileImage} />
+                <img className="w-[90px] max-w-50 aspect-square rounded-full" src={import.meta.env.VITE_BACKEND_URL + "/api" + profileImage} />
                 <div className="flex flex-col">
                     <p className="text-2xl font-medium">{name}</p>
                     {description && description.length>0 && <p>{description}</p>}

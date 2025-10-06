@@ -11,7 +11,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen, btnRef, showPopup, s
     const { user, isAuthenticated, checkAuth } = useAuthStore();
     const profileRef = useRef(null);
     const navigate = useNavigate();
-    const profileImage = user ? import.meta.env.VITE_BASE_URL + user.profileImage : import.meta.env.VITE_BASE_URL + "/assets/default-profile.png";
+    const profileImage = user ? import.meta.env.VITE_BACKEND_URL + "/api" + user.profileImage : import.meta.env.VITE_BACKEND_URL + "/api" + "/assets/default-profile.png";
     const [showNotif, setShowNotif] = useState(false);
     const notifRef = useRef(null);
 
@@ -32,7 +32,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen, btnRef, showPopup, s
     }, [])
 
     return (
-        <div className="h-[60px] flex justify-between items-center  p-2 w-full sm:w-[95%] mx-auto mb-4 backdrop-blur-sm gap-4">
+        <div className="h-[60px] flex justify-between items-center  p-2 w-full sm:w-[95%] mx-auto mb-4 backdrop-blur-sm sm:gap-4 ">
             <div className="flex gap-4 sm:gap-8 justify-center">
                 <div className="flex justify-center items-center">
                     <button
@@ -70,9 +70,7 @@ export default function Header({ isMenuOpen, setIsMenuOpen, btnRef, showPopup, s
                             setShowPopup(v => !v);
                             return;
                         }
-                        await checkAuth();
-                        if (isAuthenticated) setShowPopup(v => !v);
-                        else navigate("/login")
+                        navigate("/login")
                     }}>
                         <img
                             className="rounded-full aspect-square h-[40px] w-[40px] hover:outline-4 hover:outline-gray-500/40"

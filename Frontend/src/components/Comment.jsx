@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 
 function Reply({ reply, setReplies, slug, commentId, setShowReplies }) {
     const [showReplyInput, setShowReplyInput] = useState(false);
-    const imgSrc = import.meta.env.VITE_BASE_URL + reply.author.profileImage;
+    const imgSrc = import.meta.env.VITE_BACKEND_URL + "/api" + reply.author.profileImage;
     const {
         register,
         handleSubmit,
@@ -93,7 +93,7 @@ export function Comment({ content, author, repliesLen, _id, slug }) {
         <div className="space-y-1 my-1">
             <div className="flex gap-2">
                 <Link className="flex  items-center gap-2 w-fit" to={`/users/${author.username}`}>
-                <img src={import.meta.env.VITE_BASE_URL + author.profileImage} className="h-[30px] aspect-square rounded-full" />
+                <img src={import.meta.env.VITE_BACKEND_URL + "/api" + author.profileImage} className="h-[30px] aspect-square rounded-full" />
             </Link>
             <div className="pt-2">
                 <p>@{author.username}</p>

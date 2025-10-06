@@ -86,7 +86,7 @@ export default function User() {
         <div className="flex flex-col justify-center items-center">
             <div className="flex flex-col justify-center items-center space-y-2 m-2 w-[90%] max-w-[700px]">
                 <h2 className="text-2xl">{user.name}</h2>
-                <img className="w-[200px] aspect-square max-w-[50vw] rounded-full" src={import.meta.env.VITE_BASE_URL + user.profileImage} />
+                <img className="w-[200px] aspect-square max-w-[50vw] rounded-full" src={import.meta.env.VITE_BACKEND_URL + "/api" + user.profileImage} />
                 {user.description && user.description.length > 0 &&
                     <p>{user.description}</p>
                 }

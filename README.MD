@@ -62,15 +62,14 @@ MONGODBURI
 PORT
 TOKENSECRET
 NOD_ENV=dev
-MY_URL=<back-end-url>
+BACKEND_URL=<back-end-url (without slash at the end)>
 GOOGLE_CLIENT_ID
 GOOGLE_CLIENT_SECRET
-FRONTEND_URL
+FRONTEND_URL=<front-end-url (without slash at the end)>
 
 Create a .env file in the frontend directory for API URLs or other configs:
 
-VITE_BASE_URL=<backend-url+/api>
-VITE_BACKEND_URL=<backend-url>
+VITE_BACKEND_URL=<backend-url (without slash at the end)>
 
 
 Run the Application:

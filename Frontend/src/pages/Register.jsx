@@ -44,7 +44,7 @@ export default function Register(){
                     <input {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'Password must be atleast 6 characters.' } })} type="password" className="max-w-[700px] w-full border-2 rounded-2xl pl-2 h-[50px] outline-gray-800 focus:outline-2 focus:outline-gray-600" placeholder="Password"></input>
                     {errors.password && <p className="text-red-500 text-xs sm:text-sm">{errors.password.message}</p>}
 
-                    <button className="max-w-[700px] w-full h-[50px] rounded-2xl bg-blue-600 text-white" type="submit" disabled={isSubmitting}>{isSubmitting && <CircularProgress color="white" size={10} className="inline" />}{isSubmitting ? "Submitting" : "Submit"}</button>
+                    <button className="max-w-[700px] w-full h-[50px] rounded-2xl bg-blue-600 hover:bg-blue-700 text-white" type="submit" disabled={isSubmitting}>{isSubmitting && <CircularProgress color="white" size={10} className="inline" />}{isSubmitting ? "Submitting" : "Submit"}</button>
                 </Form>
 
                 <p className="py-4 w-fit mx-auto text-sm">Already have an account? <Link className="underline" to={`/login?redirectTo=${redirectTo}`}>Login here.</Link></p>
@@ -54,7 +54,7 @@ export default function Register(){
 
             <button
         onClick={handleGoogleLogin}
-        className="w-full max-w-sm mt-4 bg-blue-500 text-white p-2 rounded hover:bg-blue-600 flex gap-2 items-center justify-center"
+        className="w-full max-w-[700px] h-[50px] mt-4 bg-blue-600 text-white p-2 rounded-2xl hover:bg-blue-700 flex gap-2 items-center justify-center"
       >
         <GoogleIcon/>
         Continue with Google

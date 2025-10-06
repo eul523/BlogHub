@@ -53,9 +53,9 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
 
 
     return (
-        <div className="flex flex-col max-w-[700px] w-[90%] justify-center h-full space-y-8">
+        <div className="flex flex-col max-w-[700px] w-[95%] sm:w-[90%] justify-center h-full space-y-8">
             <Link to={`/users/${author.username}`} className="flex justify-start gap-2 items-center">
-                <img src={import.meta.env.VITE_BASE_URL + author.profileImage} className="w-[25px] aspect-square rounded-full" />
+                <img src={import.meta.env.VITE_BACKEND_URL + "/api" + author.profileImage} className="w-[25px] aspect-square rounded-full" />
                 <p>{author.name}</p>
 
             </Link>
@@ -63,7 +63,7 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
             <h1 className="font-extrabold text-3xl">{title}</h1>
             {images.length > 0 &&
                 <div className="h-fit overflow-x-scroll flex gap-2 p-0 overflow-y-visible">
-                    {images.map(i => <img key={i} className="h-[200px] aspect-auto" src={import.meta.env.VITE_BASE_URL + i} />)}
+                    {images.map(i => <img key={i} className="h-[200px] aspect-auto" src={import.meta.env.VITE_BACKEND_URL + "/api" + i} />)}
                 </div>
             }
             <RichTextEditor content={body} editable={false} />

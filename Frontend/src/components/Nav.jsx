@@ -43,7 +43,7 @@ export default function Nav({ isMenuOpen, setIsMenuOpen, btnRef, setShowSettings
                 </div>
                 <nav ref={navRef}>
 
-                    <div className="flex flex-col space-y-4 mx-4 my-4 ">
+                    <div className="flex flex-col pl-4 space-y-4 mx-4 my-4 ">
 
                         <div className="w-full flex flex-col space-y-3 ">
                             <NavLink

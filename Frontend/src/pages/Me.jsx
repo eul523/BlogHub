@@ -58,11 +58,11 @@ export default function Me() {
         <div className="flex flex-col justify-center items-center">
             <div className="flex flex-col justify-center items-center space-y-2 m-2 w-[90%] max-w-[700px]">
                 <h2 className="text-2xl">{user.name}</h2>
-                <img className="w-[200px] aspect-square max-w-[50vw] rounded-full" src={import.meta.env.VITE_BASE_URL + user.profileImage} />
+                <img className="w-[200px] aspect-square max-w-[50vw] rounded-full" src={import.meta.env.VITE_BACKEND_URL + "/api" + user.profileImage} />
                 {user.description && user.description.length > 0 &&
                     <p>{user.description}</p>
                 }
-                <p>{user.followers_count} <span>Followers</span></p>
+                <Link to={`/users/${user.username}/followers`}>{user.followers_count} <span>Followers</span></Link>
                 <p>{user.following_count} <span>Following</span></p>
                 <div className="flex flex-row w-full justify-center items-center gap-1">
                     <Link to={"/edit-profile"} className="w-full h-[50px] rounded-full bg-black dark:bg-[#1E1E1E] text-white flex justify-center items-center"><Edit className="mr-1" />Edit profile</Link>

@@ -64,7 +64,7 @@ export default function SearchBar() {
                     <p className="font-medium w-full border-b-1 text-center pb-2 mb-2 underline">People</p>
                     {suggestions.users.map(user => (
                         <Link className="w-full flex items-center gap-2 hover:bg-gray-500/50 rounded p-1" onClick={()=>{if(inputRef.current)inputRef.current.value="";setSearchInput("")}} to={`/users/${user.username}`}>
-                            <img src={import.meta.env.VITE_BASE_URL+user.profileImage} className="h-[40px] aspect-square rounded-full"/>
+                            <img src={import.meta.env.VITE_BACKEND_URL + "/api"+user.profileImage} className="h-[40px] aspect-square rounded-full"/>
                             <p className="font-medium">{user.name}</p>
                         </Link>
                     ))}
