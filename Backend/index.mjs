@@ -25,8 +25,8 @@ mongoose.connection.on("disconnected", () => connectDB(uri));
 
 const app = express();
 const corsOptions = {
-  origin: ["http://localhost:5173","http://192.168.56.1:5173","http://192.168.1.11:5173"], 
-  credentials: true, 
+  origin: [process.env.FRONTEND_URL], 
+  credentials: true,
 };
 
 app.use(express.json());
@@ -104,4 +104,4 @@ app.use((err, req, res) => {
     const msg = err.message || "Internal server error.";
     return res.status(status).json({msg:msg});
 })
-app.listen(port);
+app.listen(port, "0.0.0.0");

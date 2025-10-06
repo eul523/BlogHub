@@ -16,20 +16,19 @@ import Image from "../models/imageModel.js";
 
 dotenv.config();
 
-
 const router = express.Router();
 
 const googleClient = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  `${process.env.MY_URL}api/auth/google/callback`
+  `${process.env.BACKEND_URL}/api/auth/google/callback`
 );
 
 
 router.get("/google", (req, res) => {
   const url = googleClient.generateAuthUrl({
     scope: ["openid", "email", "profile"],
-    redirect_uri: `${process.env.MY_URL}api/auth/google/callback`,
+    redirect_uri: `${process.env.BACKEND_URL}/api/auth/google/callback`,
   });
   res.redirect(url);
 });
