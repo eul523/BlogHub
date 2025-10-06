@@ -57,7 +57,7 @@ export default function Layout() {
 
     return (
         <>
-            <div className="m-0 p-0 box-border max-w-full overflow-x-hidden">
+            <div className="m-0 p-0 box-border max-w-full overflow-x-hidden sm:overflow-x-visible">
 
                 <header className="sticky top-0 z-40 shadow-xl">
                     <Header {...{ isMenuOpen, setIsMenuOpen, btnRef, setShowPopup, showPopup, setShowSettings, notifications, setNotifications }} />
