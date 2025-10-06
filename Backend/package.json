@@ -2,9 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
-    "start": "node --watch index.mjs"
+    "start": "node index.mjs"
   },
   "keywords": [],
   "author": "",
