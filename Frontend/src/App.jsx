@@ -16,7 +16,7 @@ import Favourites, { loader as favLoader } from "./pages/Favourites.jsx";
 import NotFound from "./pages/404.jsx";
 import Followers, {loader as followersLoader} from "./pages/Followers.jsx";
 
-
+//Routes
 const router = createBrowserRouter([
   {
     path: '/',
