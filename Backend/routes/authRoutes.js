@@ -113,7 +113,7 @@ router.get("/google/callback", async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: "strict"
+      sameSite: "none"
     });
     res.redirect(`${process.env.FRONTEND_URL}/me`);
   } catch (err) {
@@ -169,7 +169,7 @@ const registerRoute = asyncHandler(async (req, res) => {
   res.cookie("token", Token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: "strict"
+    sameSite: "none"
   });
   return res.status(200).json({
     msg: "Registered successfully.",
@@ -209,7 +209,7 @@ const loginRoute = asyncHandler(async (req, res) => {
   res.cookie("token", Token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: "strict"
+    sameSite: "none"
   });
   return res.json({
     msg: "Logged in succesfully.",
@@ -222,7 +222,7 @@ const logoutRoute = asyncHandler(async (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
+    sameSite: 'none'
   });
 
   res.json({
