@@ -110,8 +110,8 @@ export default function CreatePost() {
             type="text"
             {...register('title', {
               required: 'Title is required.',
-              minLength: { value: 3, message: 'Title must be 3+ characters long.' },
-              maxLength: { value: 100, message: 'Title must not exceed 100 characters.' },
+              minLength: { value: 2, message: 'Title must be 2+ characters long.' },
+              maxLength: { value: 300, message: 'Title must not exceed 300 characters.' },
             })}
             placeholder="Title to your post"
             className="border-b border-b-black dark:border-b-white focus:outline-0 focus:border-b-2 h-[50px] w-full"

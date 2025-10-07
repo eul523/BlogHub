@@ -68,8 +68,8 @@ const postsSchema = mongoose.Schema({
         type:String,
         required:true,
         trim:true,
-        minlength:3,
-        maxlength:100
+        minlength:2,
+        maxlength:300
     },
     body:{
         type:String,

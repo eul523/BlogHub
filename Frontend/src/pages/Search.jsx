@@ -56,14 +56,14 @@ export default function Search() {
 
     return (
         <div className="p-4 space-y-4 flex flex-col justify-center items-center">
-            {len > 0 ? (
+            {results.length > 0 ? (
                 <>
                     <h1 className="text-2xl w-fit mx-auto font-bold"><span className="text-gray-500">Results for </span><span>{q}</span></h1>
 
                     <div className="flex gap-4 p-0 m-4 mb-8 w-[90%] max-w-[700px]">
-                        <NavLink to={`/search?q=${q}&filter=posts`} className={`${filter === "posts" ? "border-b border-b-black dark:border-b-gray-100" : "text-gray-500"} p-2`}>Posts</NavLink>
+                        <NavLink onClick={()=>setResults(data.posts)} to={`/search?q=${q}&filter=posts`} className={`${filter === "posts" ? "border-b border-b-black dark:border-b-gray-100" : "text-gray-500"} p-2`}>Posts</NavLink>
 
-                        <NavLink className={`${filter === "users" ? "border-b border-b-black dark:border-b-gray-100" : "text-gray-500"} p-2`} to={`/search?q=${q}&filter=users`}>Users</NavLink>
+                        <NavLink onClick={()=>setResults(data.users)} className={`${filter === "users" ? "border-b border-b-black dark:border-b-gray-100" : "text-gray-500"} p-2`} to={`/search?q=${q}&filter=users`}>Users</NavLink>
                     </div>
                 </>
 
