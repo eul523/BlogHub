@@ -6,8 +6,8 @@ import { useState } from "react";
 
 
 export default function Post({ title, body, likes_count, comments_count, slug, author, dateWritten, images, tags, liked:likedN, isOwner, isFavourite }) {
-    const shortTitle = title.length>25 ? title.slice(0,25)+"..." : title;
-    const snippet = body.length > 150 ? truncate(body, 100, { ellipsis: "..." }) : body;
+    const shortTitle = title.length>85 ? title.slice(0,85)+"..." : title;
+    const snippet = body.length > 300 ? truncate(body, 250, { ellipsis: "..." }) : body;
     const [ liked, setLiked ] = useState(likedN);
     const [favourite, setFavourite] = useState(isFavourite);
     const [ likesCount, setLikesCount ] = useState(likes_count);
@@ -27,7 +27,7 @@ export default function Post({ title, body, likes_count, comments_count, slug, a
                         <div className="sm:hidden flex overflow-x-scroll gap-4 my-4">
                             {images.length>0 &&
                                images.map(i=>(
-                                <img key={i} src={import.meta.env.VITE_BACKEND_URL + "/api" + i} className="h-[110px] aspect-auto"/>
+                                <img key={i} src={import.meta.env.VITE_BACKEND_URL + "/api" + i} className="h-[160px] aspect-auto"/>
                                ))
                             }
 

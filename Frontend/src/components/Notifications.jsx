@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 
 function Notification({ _id, type, content, createdAt, additionalInfo, setShowNotif }) {
     const additionalTypes = { newPost: "slug", newLike: "slug", newComment: "slug", newReply: "slug", newFollower: "username"};
-    const linkTo = "/users/" + additionalInfo[additionalTypes[type]];
+    const linkTo = type==="newPost" ? "/posts/" : "/users/" + additionalInfo[additionalTypes[type]];
 
     return (
         <div className="w-56 p-0 flex border-b last:border-b-0 m-0">

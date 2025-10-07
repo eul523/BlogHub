@@ -44,7 +44,7 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
             const res = await api.post(`/posts/${slug}/comments/`, { content: data.content });
             setCommentsCount(p => p + 1);
             setShowComments(true);
-            reset({}, { keepErrors: false })
+            reset()
             setComments(p => [res.data.comment, ...p]);
         } catch (err) {
             toast.error(err.response?.data?.msg || "Couldn't Comment.");
@@ -67,9 +67,9 @@ export default function PostDetail({ _id, title, body, likes_count, comments_cou
                 </div>
             }
             <RichTextEditor content={body} editable={false} />
-
-            {tags.length > 0 && <div className="flex gap-1 text-white">
-                {tags.map(tag => <Link to={`/search?q=${tag}`} key={tag} className="border rounded text-[0.7rem] bg-gray-400 dark:bg-[#1E1E1E] px-1">{"#" + tag}</Link>)}
+            
+            {tags.length > 0 && <div className="flex gap-1 text-white overflow-x-scroll">
+                {tags.map(tag => <Link to={`/search?q=${tag}`} key={tag} className="border rounded text-[0.7rem] bg-gray-400 dark:bg-[#1E1E1E] px-1 whitespace-nowrap">{"#" + tag}</Link>)}
             </div>}
 
 

@@ -6,6 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Settings from "../pages/Settings.jsx";
 import { Toaster } from "react-hot-toast";
 import api from "../api/api.js";
+import useAuthStore from "../stores/authStore.js";
 
 const isDarkModeStored = window.localStorage.getItem('isDarkMode');
 const isDarkMode =
@@ -22,6 +23,7 @@ export default function Layout() {
     const isNavigating = Boolean(navigation.location);
     const [showSettings, setShowSettings] = useState(false);
     const [notifications, setNotifications]  = useState([]);
+    const { isAuthenticated } = useAuthStore();
 
     const toggleDarkMode = () => {
         window.localStorage.setItem("isDarkMode", String(!darkMode));
@@ -41,6 +43,7 @@ export default function Layout() {
 
     useEffect(()=>{
         const fetchNotifs = async () => {
+            if(!isAuthenticated)return;
             try{
                 const data = await api.get("/notifications");
                 if(JSON.stringify(data.data) !== JSON.stringify(notifications))setNotifications(data.data);
@@ -57,7 +60,7 @@ export default function Layout() {
 
     return (
         <>
-            <div className="m-0 p-0 box-border max-w-full overflow-x-hidden sm:overflow-x-visible">
+            <div className="m-0 p-0 box-border max-w-full overflow-x-hidden sm:overflow-x-visible min-h-[100vh]">
 
                 <header className="sticky top-0 z-40 shadow-xl">
                     <Header {...{ isMenuOpen, setIsMenuOpen, btnRef, setShowPopup, showPopup, setShowSettings, notifications, setNotifications }} />

@@ -48,7 +48,7 @@ export default function SearchBar() {
             </form>
 
             {focused && (suggestions.posts?.length || suggestions.users?.length) > 0 &&
-                <div className="absolute mt-2 ml-4 bg-white dark:bg-[#1E1E1E] shadow-[0_0_20px_rgba(0,0,0,0.3)] p-2 rounded max-h-72 overflow-y-auto w-full">
+                <div className="absolute mt-2 ml-4 bg-white dark:bg-[#1E1E1E] shadow-[0_0_20px_rgba(0,0,0,0.3)] p-2 rounded max-h-72 overflow-y-auto w-[70vw] sm:w-full right-[-100%] sm:right-auto max-w-[500px]">
                     {suggestions.posts.length>0 && 
                     <div className="flex flex-col justify-center items-center py-2">
                     <p className="font-medium w-full border-b-1 text-center pb-2 mb-2 underline">Posts</p>

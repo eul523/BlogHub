@@ -3,6 +3,8 @@
 
 BlogHub is a full-stack blog platform built with the MERN stack. It allows users to create, like, and comment on posts, reply to comments, search for content with autocomplete, sign in with Google or email/password, and update their profiles. The project is currently in development, with additional features and improvements planned.
 
+## You can check it out here: https://blog-hub-e.vercel.app/
+
 # Features
 
 ## Post Management: 
@@ -82,8 +84,6 @@ Start the frontend development server:
 cd frontend
 npm run dev
 
-# Project Status
-This project is in progress. Current features are functional but may have bugs or incomplete implementations. 
 
 # Contributing
 Contributions are welcome! To contribute:
