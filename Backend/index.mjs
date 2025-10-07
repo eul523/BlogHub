@@ -89,6 +89,7 @@ app.get("/api/assets/:filename", (req, res) => {
   });
 });
 
+//Routes
 app.use("/api/posts", postRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
