@@ -104,4 +104,5 @@ app.use((err, req, res) => {
     const msg = err.message || "Internal server error.";
     return res.status(status).json({msg:msg});
 })
-app.listen(port, "0.0.0.0");
+
+export default app;
