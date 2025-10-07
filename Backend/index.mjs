@@ -25,20 +25,16 @@ mongoose.connection.on("disconnected", () => connectDB(uri));
 
 const app = express();
 const corsOptions = {
-  origin: [process.env.FRONTEND_URL], 
-  credentials: true,
+  origin: [process.env.FRONTEND_URL], // Must match exactly
+  credentials: true, // Required for cookies/auth
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow all HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization', 'Set-Cookie'], 
 };
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
-
-app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "unsafe-none"); // Allow cross-origin postMessage
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp"); // Optional, adjust if needed
-  next();
-});
 
 
 // route to serve image binary
