@@ -33,7 +33,7 @@ const protectRoute = asyncHandler(async (req, res, next) => {
         if (timeLeft < 60 * 60 * 24) {
             
             const newToken = generateToken({ id: decoded.id });
-            res.cookie("token",newToken, {httpOnly:true, secure:process.env.NODE_ENV === 'production', sameSite:"strict"});
+            res.cookie("token",newToken, {httpOnly:true, secure:process.env.NODE_ENV === 'production', sameSite:"none"});
         }
         req.user = user;
         next()
@@ -62,7 +62,7 @@ const protectRouteLoose = asyncHandler(async (req, res, next) => {
         if (timeLeft < 60 * 60 * 24) {
             
             const newToken = generateToken({ id: decoded.id });
-            res.cookie("token",newToken, {httpOnly:true, secure:process.env.NODE_ENV === 'production', sameSite:"strict"});
+            res.cookie("token",newToken, {httpOnly:true, secure:process.env.NODE_ENV === 'production', sameSite:"none"});
         }
         req.user = user;
         next()
