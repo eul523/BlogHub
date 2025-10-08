@@ -15,11 +15,13 @@ import Me, { loader as meLoader } from "./pages/Me.jsx";
 import Favourites, { loader as favLoader } from "./pages/Favourites.jsx";
 import NotFound from "./pages/404.jsx";
 import Followers, {loader as followersLoader} from "./pages/Followers.jsx";
+import ErrorElement from "./pages/ErrorElement.jsx";
 
 //Routes
 const router = createBrowserRouter([
   {
     path: '/',
+    errorElement: <ErrorElement/>,
     element: <Layout />,
     children: [
       {
